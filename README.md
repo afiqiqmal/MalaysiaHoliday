@@ -1,4 +1,4 @@
-# MalaysiaHoliday
+# Malaysia Holiday Date List
 To get all holidays dates in Malaysia
 
 
@@ -22,6 +22,7 @@ Holidays by regional in 2017
 
 
 Grouping and Filter result
+
 `Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();`
 `Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')	`
 
