@@ -26,7 +26,12 @@ Grouping and Filter result
 `Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')	`
 
 
-### Source
-- http://www.officeholidays.com/countries/malaysia
+### install
 
-### MIT Licience
+`composer require afiqiqmal/malaysiaholiday`
+
+
+### Source
+Scraped from - http://www.officeholidays.com/countries/malaysia
+
+### MIT Licence
