@@ -56,12 +56,13 @@ class Holiday
 			if ($this->month != null && $this->checkMonth($this->month)) {
 				foreach ($this->result['data'] as $key => $holiday){
 					if(date('F',strtotime($holiday['date'])) == $this->month){
-						$holiday['month'] = $this->month;
 						$temp[] = $holiday;
 					}
 				}
 
 				$this->result['data'] = $temp;
+
+				header('Content-Type: application/json');
 				return json_encode($this->result,JSON_PRETTY_PRINT);
 			}
 			else if($this->groupByMonth)
@@ -72,24 +73,27 @@ class Holiday
 				}
 
 				$this->result['data'] = $temp;
+
+				header('Content-Type: application/json');	
 				return json_encode($this->result,JSON_PRETTY_PRINT);
 			}
 			else{
+
+				header('Content-Type: application/json');	
 				return json_encode($this->result,JSON_PRETTY_PRINT);
 			}
 		}
 		else{
 			return [
 					'status' => false,
-					'message' => "Error occured with the result"
+					'message' => "Error occured with the results"
 				];
 		}
 	}
 
 	private function baseRequest($region,$year)
 	{
-		return $this->queryWeb($region,$year);
-		// header('Content-Type: application/json');		
+		return $this->queryWeb($region,$year);	
 	}
 
 	private function queryWeb($regional,$year)
@@ -122,8 +126,24 @@ class Holiday
 					$temp['day'] = trim($node->children()->eq(0)->text());
 					$date_str = strtok(trim($node->children()->eq(1)->extract('_text','class')[0]),"\n")." ".$currentYear;
 					$temp['date'] = date_format(date_create_from_format('F d Y',$date_str),'d-m-Y');
+					$temp['month'] = date('F',strtotime($temp['date']));
 					$temp['name'] = trim($node->children()->eq(2)->text());
 					$temp['description'] = trim($node->children()->eq(3)->text());
+					if($node->extract('class')[0]){
+						if ($node->extract('class')[0] == 'publicholiday') {
+							$temp['type'] = "Not a Public Holiday";
+						}
+						else if ($node->extract('class')[0] == 'holiday') {
+							$temp['type'] = "National Holiday";
+						}
+						else if ($node->extract('class')[0] == 'regional') {
+							$temp['type'] = "Regional Holiday";
+						}
+						else{
+							$temp['type'] = "Unknown";
+						}
+					}
+					
 					return $temp;
 				}
 			});
