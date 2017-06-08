@@ -10,6 +10,10 @@ class Holiday
 	private $regional_path;
 
 	private $client;
+	private $result;
+
+	private $month;
+	private $groupByMonth = false;
 
 	public function __construct()
 	{
@@ -18,7 +22,7 @@ class Holiday
 
       	$this->client = new Client();
    	}
-
+   	//Holiday holiday = new Holiday;
 	public static function init()
 	{
 		return new self;
@@ -26,20 +30,66 @@ class Holiday
 
 	public function getAllRegionHoliday($year = 2017)
 	{	
-		return $this->baseRequest(null,$year);
+		$this->result = $this->baseRequest(null,$year);
+		return $this;
 	}
 
 	public function getRegionHoliday($region,$year = 2017)
 	{
-		return $this->baseRequest($region,$year);
+		$this->result = $this->baseRequest($region,$year);
+		return $this;
+	}
+
+	public function groupByMonth(){
+		$this->groupByMonth = true;
+		return $this;
+	}
+
+	public function filterByMonth($month){
+		$this->month = $month;
+		return $this;
+	}
+
+	public function get(){
+		if($this->result['status'])
+		{
+			if ($this->month != null && $this->checkMonth($this->month)) {
+				foreach ($this->result['data'] as $key => $holiday){
+					if(date('F',strtotime($holiday['date'])) == $this->month){
+						$holiday['month'] = $this->month;
+						$temp[] = $holiday;
+					}
+				}
+
+				$this->result['data'] = $temp;
+				return json_encode($this->result,JSON_PRETTY_PRINT);
+			}
+			else if($this->groupByMonth)
+			{
+				foreach ($this->result['data'] as $key => $holiday) 
+				{
+					$temp[date('F',strtotime($holiday['date']))][] = $holiday;
+				}
+
+				$this->result['data'] = $temp;
+				return json_encode($this->result,JSON_PRETTY_PRINT);
+			}
+			else{
+				return json_encode($this->result,JSON_PRETTY_PRINT);
+			}
+		}
+		else{
+			return [
+					'status' => false,
+					'message' => "Error occured with the result"
+				];
+		}
 	}
 
 	private function baseRequest($region,$year)
 	{
-		$result = $this->queryWeb($region,$year);
-		
-		header('Content-Type: application/json');
-		return json_encode($result);
+		return $this->queryWeb($region,$year);
+		// header('Content-Type: application/json');		
 	}
 
 	private function queryWeb($regional,$year)
@@ -110,4 +160,27 @@ class Holiday
 		}
 		return false;
 	}
+
+	private function checkMonth($month)
+	{
+		$arrays = array('January','February','March','April','May','June','July','August','September','October','November','December');
+		if (in_array(strtolower($month), array_map('strtolower', $arrays))) {
+			return true;
+		}
+		return false;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

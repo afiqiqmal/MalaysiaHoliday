@@ -6,20 +6,24 @@ To get all holidays dates in Malaysia
 
 Holidays in current years
 
-`Holiday::init()->getAllRegionHoliday();`
+`Holiday::init()->getAllRegionHoliday()->get();`
 
 Holidays in specific years
 
-`Holiday::init()->getAllRegionHoliday("2017");`
+`Holiday::init()->getAllRegionHoliday("2017")->get();`
 
 Holidays by regional
 
-`Holiday::init()->getRegionHoliday("Selangor");`
+`Holiday::init()->getRegionHoliday("Selangor")->get();`
 
 Holidays by regional in 2017
 
-`Holiday::init()->getRegionHoliday("Selangor","2017");`
+`Holiday::init()->getRegionHoliday("Selangor","2017")->get();`
 
+
+Grouping and Filter result
+`Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();`
+`Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')	`
 
 
 ### Source
