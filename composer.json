@@ -2,6 +2,7 @@
     "name": "afiqiqmal/malaysiaholiday",
     "description": "to get all holidays date in malaysia",
     "type": "package",
+    "keywords": ["php"],
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +14,6 @@
         "php": ">=5.3.0",
         "fabpot/goutte": "^3.2"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "afiqiqmal\\MalaysiaHoliday\\":"src/"

@@ -129,19 +129,22 @@ class Holiday
 					$temp['month'] = date('F',strtotime($temp['date']));
 					$temp['name'] = trim($node->children()->eq(2)->text());
 					$temp['description'] = trim($node->children()->eq(3)->text());
-					if($node->extract('class')[0]){
-						if ($node->extract('class')[0] == 'publicholiday') {
-							$temp['type'] = "Not a Public Holiday";
-						}
-						else if ($node->extract('class')[0] == 'holiday') {
-							$temp['type'] = "National Holiday";
-						}
-						else if ($node->extract('class')[0] == 'regional') {
-							$temp['type'] = "Regional Holiday";
-						}
-						else{
-							$temp['type'] = "Unknown";
-						}
+					switch ($node->extract('class')[0]) {
+							case 'govt_holiday':
+								$temp['type'] = "Government/Public Sector Holiday";
+								break;
+							case 'publicholiday':
+								$temp['type'] = "Not a Public Holiday";
+								break;
+							case 'holiday':
+								$temp['type'] = "National Holiday";
+								break;
+							case 'regional':
+								$temp['type'] = "Regional Holiday";
+								break;
+							default:
+								$temp['type'] = "Unknown";
+								break;
 					}
 					
 					return $temp;
