@@ -63,7 +63,7 @@ class Holiday
 				$this->result['data'] = $temp;
 
 				header('Content-Type: application/json');
-				return json_encode($this->result,JSON_PRETTY_PRINT);
+				return json_encode($this->result);
 			}
 			else if($this->groupByMonth)
 			{
@@ -75,12 +75,12 @@ class Holiday
 				$this->result['data'] = $temp;
 
 				header('Content-Type: application/json');	
-				return json_encode($this->result,JSON_PRETTY_PRINT);
+				return json_encode($this->result);
 			}
 			else{
 
 				header('Content-Type: application/json');	
-				return json_encode($this->result,JSON_PRETTY_PRINT);
+				return json_encode($this->result);
 			}
 		}
 		else{
