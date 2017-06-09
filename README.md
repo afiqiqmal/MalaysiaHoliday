@@ -6,31 +6,48 @@ To get all holidays dates in Malaysia
 
 Holidays in current years
 
-`Holiday::init()->getAllRegionHoliday()->get();`
+<pre>
+Holiday::init()->getAllRegionHoliday()->get();
+</pre>
 
 Holidays in specific years
 
-`Holiday::init()->getAllRegionHoliday("2017")->get();`
+<pre>
+Holiday::init()->getAllRegionHoliday("2017")->get();
+</pre>
 
 Holidays by regional
 
-`Holiday::init()->getRegionHoliday("Selangor")->get();`
+<pre>
+Holiday::init()->getRegionHoliday("Selangor")->get();
+</pre>
 
 Holidays by regional in 2017
 
-`Holiday::init()->getRegionHoliday("Selangor","2017")->get();`
+<pre>
+Holiday::init()->getRegionHoliday("Selangor","2017")->get();
+</pre>
 
 
 Grouping and Filter result
 
-`Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();`
-
-`Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')	`
+<pre>
+Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();
+Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
+</pre>
 
 
 ### install
 
 `composer require afiqiqmal/malaysiaholiday`
+
+or 
+
+<pre>
+require{
+	"afiqiqmal/malaysiaholiday": "^1.0"
+}
+</pre>
 
 
 ### Source
