@@ -21,6 +21,8 @@ class Holiday
       	$this->regional_path = "/regional.php";
 
       	$this->client = new Client();
+
+      	error_reporting(0);
    	}
    	//Holiday holiday = new Holiday;
 	public static function init()
@@ -120,53 +122,66 @@ class Holiday
 
 		if ($request_url !=null) 
 		{
-			$crawler = $this->client->request('GET', $request_url);
-			$result = $crawler->filter('.list-table tr')->each(function ($node) use ($currentYear){
-			    if($node->children()->nodeName() == 'td'){
-					$temp['day'] = trim($node->children()->eq(0)->text());
-					$date_str = strtok(trim($node->children()->eq(1)->extract('_text','class')[0]),"\n")." ".$currentYear;
-					$temp['date'] = date_format(date_create_from_format('F d Y',$date_str),'d-m-Y');
-					$temp['month'] = date('F',strtotime($temp['date']));
-					$temp['name'] = trim($node->children()->eq(2)->text());
-					$temp['description'] = trim($node->children()->eq(3)->text());
-					$temp['status'] = true;
-					switch ($node->extract('class')[0]) {
-							case 'govt_holiday':
-								$temp['type'] = "Government/Public Sector Holiday";
-								break;
-							case 'publicholiday':
-								$temp['type'] = "Not a Public Holiday";
-								$temp['status'] = false;
-								break;
-							case 'holiday':
-								$temp['type'] = "National Holiday";
-								break;
-							case 'regional':
-								$temp['type'] = "Regional Holiday";
-								break;
-							default:
-								$temp['type'] = "Unknown";
-								break;
+			try{
+				$crawler = $this->client->request('GET', $request_url);
+				$result = $crawler->filter('.list-table tr')->each(function ($node) use ($currentYear){
+				    if($node->children()->nodeName() == 'td'){
+						$temp['day'] = trim($node->children()->eq(0)->text());
+						$date_str = strtok(trim($node->children()->eq(1)->extract('_text','class')[0]),"\n")." ".$currentYear;
+						if($date_str == null || empty($date_str)){
+							return null;
+						}
+						$temp['date'] = date_format(date_create_from_format('F d Y',$date_str),'d-m-Y');
+						$temp['month'] = date('F',strtotime($temp['date']));
+						$temp['name'] = trim($node->children()->eq(2)->text());
+						$temp['description'] = trim($node->children()->eq(3)->text());
+						$temp['status'] = true;
+						switch ($node->extract('class')[0]) {
+								case 'govt_holiday':
+									$temp['type'] = "Government/Public Sector Holiday";
+									break;
+								case 'publicholiday':
+									$temp['type'] = "Not a Public Holiday";
+									$temp['status'] = false;
+									break;
+								case 'holiday':
+									$temp['type'] = "National Holiday";
+									break;
+								case 'regional':
+									$temp['type'] = "Regional Holiday";
+									break;
+								default:
+									$temp['type'] = "Unknown";
+									break;
+						}
+						
+						return $temp;
 					}
-					
-					return $temp;
-				}
-			});
+				});
 
-			$arrays = array_values(array_filter($result));
 
-			return [
-				'status' => true,
-				'regional' => ($regional == null)?"all":$regional,
-				'year'=> $currentYear,
-				'data' => $arrays,
-				'sources' => $request_url,
-				'developer' => [
-					"name"=> "Hafiq",
-				    "email"=> "hafiqiqmal93@gmail.com",
-				    "github"=> "https://github.com/afiqiqmal"
-				]
-			];
+				$arrays = array_values(array_filter($result));
+
+				return [
+					'status' => true,
+					'regional' => ($regional == null)?"all":$regional,
+					'year'=> $currentYear,
+					'data' => $arrays,
+					'sources' => $request_url,
+					'developer' => [
+						"name"=> "Hafiq",
+					    "email"=> "hafiqiqmal93@gmail.com",
+					    "github"=> "https://github.com/afiqiqmal"
+					]
+				];
+			}
+			catch(\Exception $e)
+			{
+				return [
+					'status' => false,
+					'message' => "Something went wrong or not exist yet"
+				];
+			}
 		}
 		else
 		{
