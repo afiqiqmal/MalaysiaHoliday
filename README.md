@@ -45,7 +45,7 @@ or
 
 <pre>
 require{
-	"afiqiqmal/malaysiaholiday": "^1.0"
+	"afiqiqmal/malaysiaholiday": "^1.0.2"
 }
 </pre>
 
