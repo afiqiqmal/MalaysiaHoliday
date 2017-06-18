@@ -1,3 +1,8 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="description" content="Parsing Malaysia Public Holiday into JSON">
+<link rel="author" href="https://www.facebook.com/zeroone93">
+
 # Malaysia Holiday Date List
 Parsing Malaysia Public Holiday.
 
