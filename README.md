@@ -1,5 +1,5 @@
 # Malaysia Holiday Date List
-To get all holidays dates in Malaysia
+Parsing Malaysia Public Holiday.
 
 
 ### Usage
