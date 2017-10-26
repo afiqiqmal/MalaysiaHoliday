@@ -25,6 +25,7 @@ Holidays by regional
 
 <pre>
 Holiday::init()->getRegionHoliday("Selangor")->get();
+Holiday::init()->getRegionHoliday(["Selangor","Malacca"])->get();
 </pre>
 
 Holidays by regional in 2017

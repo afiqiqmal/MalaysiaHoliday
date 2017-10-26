@@ -10,7 +10,7 @@ class Holiday
 	private $regional_path;
 
 	private $client;
-	private $result;
+	private $result = [];
 
 	private $month;
 	private $groupByMonth = false;
@@ -36,9 +36,18 @@ class Holiday
 		return $this;
 	}
 
-	public function getRegionHoliday($region,$year = 2017)
+	public function getRegionHoliday($region, $year = 2017)
 	{
-		$this->result = $this->baseRequest($region,$year);
+	    if (is_array($region)){
+	        foreach ($region as $reg) {
+                $this->result[$reg] = $this->baseRequest($reg,$year);
+            }
+
+            $this->result['status'] = true;
+        }
+        else {
+            $this->result = $this->baseRequest($region, $year);
+        }
 		return $this;
 	}
 
@@ -80,7 +89,6 @@ class Holiday
 				return json_encode($this->result);
 			}
 			else{
-
 				header('Content-Type: application/json');	
 				return json_encode($this->result);
 			}
