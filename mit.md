@@ -1,62 +1,7 @@
-# Malaysia Holiday Date List
-To get all holidays dates in Malaysia
+The MIT License (MIT)
+=====================
 
-
-### Usage
-
-Holidays in current years
-
-<pre>
-Holiday::init()->getAllRegionHoliday()->get();
-</pre>
-
-Holidays in specific years
-
-<pre>
-Holiday::init()->getAllRegionHoliday("2017")->get();
-</pre>
-
-Holidays by regional
-
-<pre>
-Holiday::init()->getRegionHoliday("Selangor")->get();
-Holiday::init()->getRegionHoliday(["Selangor","Malacca"])->get();
-</pre>
-
-Holidays by regional in 2017
-
-<pre>
-Holiday::init()->getRegionHoliday("Selangor","2017")->get();
-</pre>
-
-
-Grouping and Filter result
-
-<pre>
-Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();
-Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
-</pre>
-
-
-### install
-
-`composer require afiqiqmal/malaysiaholiday`
-
-or 
-
-<pre>
-require{
-	"afiqiqmal/malaysiaholiday": "^1.0.4"
-}
-</pre>
-
-
-### Source
-Scraped from - http://www.officeholidays.com/countries/malaysia
-
-### MIT Licence
-
-Copyright © 2017 @afiqiqmal
+Copyright © `<year>` `<copyright holders>`
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -78,3 +23,4 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
