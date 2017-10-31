@@ -15,7 +15,7 @@ Holidays in specific years
 
 ```php
 $holiday = new Holiday;
-Holiday::init()->getAllRegionHoliday("2017")->get();
+$holiday->getAllRegionHoliday("2017")->get();
 ```
 
 Holidays by regional
@@ -51,7 +51,7 @@ or
 
 ```
 require{
-	"afiqiqmal/malaysiaholiday": "^1.0.4"
+	"afiqiqmal/malaysiaholiday": "^1.0.5"
 }
 ```
 
