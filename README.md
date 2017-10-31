@@ -1,8 +1,3 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="description" content="Parsing Malaysia Public Holiday into JSON">
-<link rel="author" href="https://www.facebook.com/zeroone93">
-
 # Malaysia Holiday Date List
 Parsing Malaysia Public Holiday.
 
@@ -11,36 +6,41 @@ Parsing Malaysia Public Holiday.
 
 Holidays in current years
 
-<pre>
-Holiday::init()->getAllRegionHoliday()->get();
-</pre>
+```php
+$holiday = new Holiday;
+$holiday->getAllRegionHoliday()->get();
+```
 
 Holidays in specific years
 
-<pre>
+```php
+$holiday = new Holiday;
 Holiday::init()->getAllRegionHoliday("2017")->get();
-</pre>
+```
 
 Holidays by regional
 
-<pre>
-Holiday::init()->getRegionHoliday("Selangor")->get();
-Holiday::init()->getRegionHoliday(["Selangor","Malacca"])->get();
-</pre>
+```php
+$holiday = new Holiday;
+$holiday->getRegionHoliday("Selangor")->get();
+$holiday->getRegionHoliday(["Selangor","Malacca"])->get();
+```
 
 Holidays by regional in 2017
 
-<pre>
-Holiday::init()->getRegionHoliday("Selangor","2017")->get();
-</pre>
+```php
+$holiday = new Holiday;
+$holiday->getRegionHoliday("Selangor","2017")->get();
+```
 
 
 Grouping and Filter result
 
-<pre>
-Holiday::init()->getAllRegionHoliday()->groupByMonth()->get();
-Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
-</pre>
+```php
+$holiday = new Holiday;
+$holiday->getAllRegionHoliday()->groupByMonth()->get();
+$holiday->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
+```
 
 
 ### install
@@ -49,11 +49,11 @@ Holiday::init()->getAllRegionHoliday()->filterByMonth("January")->get();  //date
 
 or 
 
-<pre>
+```
 require{
 	"afiqiqmal/malaysiaholiday": "^1.0.4"
 }
-</pre>
+```
 
 
 ### Source
