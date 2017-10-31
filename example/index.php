@@ -10,4 +10,6 @@ require_once __DIR__ .'/../vendor/autoload.php';
 
 use afiqiqmal\MalaysiaHoliday\Holiday;
 
-echo Holiday::init()->getRegionHoliday(["Selangor","Johor"],2017)->get();
+$holiday = new Holiday;
+
+echo $holiday->getRegionHoliday(["Selangor","Johor"])->get();

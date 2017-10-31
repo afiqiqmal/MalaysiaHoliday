@@ -17,37 +17,40 @@ class Holiday
 
 	public function __construct()
 	{
-      	$this->base_url = "http://www.officeholidays.com/countries/malaysia";
-      	$this->regional_path = "/regional.php";
+		$this->base_url = "http://www.officeholidays.com/countries/malaysia";
+		$this->regional_path = "/regional.php";
 
-      	$this->client = new Client();
+		$this->client = new Client();
 
-      	error_reporting(0);
-   	}
-   	//Holiday holiday = new Holiday;
-	public static function init()
-	{
-		return new self;
+		error_reporting(0);
 	}
 
-	public function getAllRegionHoliday($year = 2017)
+	public function getAllRegionHoliday($year = null)
 	{	
-		$this->result = $this->baseRequest(null,$year);
+		if (!isset($year)) {
+			$year = date('Y');
+		} 
+
+		$this->result = $this->baseRequest(null, $year);
 		return $this;
 	}
 
-	public function getRegionHoliday($region, $year = 2017)
+	public function getRegionHoliday($region, $year = null)
 	{
-	    if (is_array($region)){
-	        foreach ($region as $reg) {
-                $this->result[$reg] = $this->baseRequest($reg,$year);
-            }
+		if (!isset($year)) {
+			$year = date('Y');
+		} 
 
-            $this->result['status'] = true;
-        }
-        else {
-            $this->result = $this->baseRequest($region, $year);
-        }
+		if (is_array($region)){
+			foreach ($region as $reg) {
+				$this->result[$reg] = $this->baseRequest($reg,$year);
+			}
+
+			$this->result['status'] = true;
+		}
+		else {
+			$this->result = $this->baseRequest($region, $year);
+		}
 		return $this;
 	}
 
@@ -95,9 +98,9 @@ class Holiday
 		}
 		else{
 			return [
-					'status' => false,
-					'message' => "Error occured with the results"
-				];
+				'status' => false,
+				'message' => "Error occured with the results"
+			];
 		}
 	}
 
@@ -133,7 +136,7 @@ class Holiday
 			try{
 				$crawler = $this->client->request('GET', $request_url);
 				$result = $crawler->filter('.list-table tr')->each(function ($node) use ($currentYear){
-				    if($node->children()->nodeName() == 'td'){
+					if($node->children()->nodeName() == 'td'){
 						$temp['day'] = trim($node->children()->eq(0)->text());
 						$date_str = strtok(trim($node->children()->eq(1)->extract('_text','class')[0]),"\n")." ".$currentYear;
 						if($date_str == null || empty($date_str)){
@@ -145,22 +148,22 @@ class Holiday
 						$temp['description'] = trim($node->children()->eq(3)->text());
 						$temp['status'] = true;
 						switch ($node->extract('class')[0]) {
-								case 'govt_holiday':
-									$temp['type'] = "Government/Public Sector Holiday";
-									break;
-								case 'publicholiday':
-									$temp['type'] = "Not a Public Holiday";
-									$temp['status'] = false;
-									break;
-								case 'holiday':
-									$temp['type'] = "National Holiday";
-									break;
-								case 'regional':
-									$temp['type'] = "Regional Holiday";
-									break;
-								default:
-									$temp['type'] = "Unknown";
-									break;
+							case 'govt_holiday':
+							$temp['type'] = "Government/Public Sector Holiday";
+							break;
+							case 'publicholiday':
+							$temp['type'] = "Not a Public Holiday";
+							$temp['status'] = false;
+							break;
+							case 'holiday':
+							$temp['type'] = "National Holiday";
+							break;
+							case 'regional':
+							$temp['type'] = "Regional Holiday";
+							break;
+							default:
+							$temp['type'] = "Unknown";
+							break;
 						}
 						
 						return $temp;
@@ -178,8 +181,8 @@ class Holiday
 					'sources' => $request_url,
 					'developer' => [
 						"name"=> "Hafiq",
-					    "email"=> "hafiqiqmal93@gmail.com",
-					    "github"=> "https://github.com/afiqiqmal"
+						"email"=> "hafiqiqmal93@gmail.com",
+						"github"=> "https://github.com/afiqiqmal"
 					]
 				];
 			}
@@ -194,9 +197,9 @@ class Holiday
 		else
 		{
 			return [
-					'status' => false,
-					'message' => "Wrong Url Format"
-				];
+				'status' => false,
+				'message' => "Wrong Url Format"
+			];
 		}
 	}
 
@@ -218,17 +221,3 @@ class Holiday
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
