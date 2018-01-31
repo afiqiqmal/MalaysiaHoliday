@@ -2,7 +2,7 @@
 Parsing Malaysia Public Holiday.
 
 [![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
-[![Coverage](https://img.shields.io/codecov/c/github/MalaysiaHoliday/fb-page-feed.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
+[![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/MalaysiaHoliday.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
 
 
 
