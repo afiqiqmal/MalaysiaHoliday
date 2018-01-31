@@ -12,7 +12,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "fabpot/goutte": "^3.2"
+        "fabpot/goutte": "^3.2",
+        "phpunit/phpunit": "^6.5"
     },
     "minimum-stability": "stable",
     "autoload": {

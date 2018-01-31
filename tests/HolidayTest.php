@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 require_once __DIR__ .'/../vendor/autoload.php';
@@ -7,48 +8,47 @@ use PHPUnit\Framework\TestCase;
 use afiqiqmal\MalaysiaHoliday\Holiday;
 
 /**
-* RequestTest.php
-* to test function in Request class
-*/
+ * RequestTest.php
+ * to test function in Request class
+ */
 class RequestTest extends TestCase
 {
-	/**
-	 * To test getting all region holiday in Malaysia
-	 */ 
-	function testGetAllRegionHoliday() 
-	{
-		$holiday = new Holiday;
-		$response = $holiday->getAllRegionHoliday()->get();
+    /**
+     * To test getting all region holiday in Malaysia
+     */
+    function testGetAllRegionHoliday()
+    {
+        $holiday = new Holiday;
+        $response = $holiday->getAllRegionHoliday()->get();
 
-		$responseObject = json_decode($response);
+        $responseObject = json_decode($response);
 
-	    $this->assertTrue($responseObject->status);
-	}
+        $this->assertTrue($responseObject->status);
+    }
 
-	/**
-	 * To test getting specific region holiday
-	 */ 
-	function testGetSpecificRegionHoliday() 
-	{
-		$holiday = new Holiday;
-		$response = $holiday->getRegionHoliday('Selangor')->get();
+    /**
+     * To test getting specific region holiday
+     */
+    function testGetSpecificRegionHoliday()
+    {
+        $holiday = new Holiday;
+        $response = $holiday->getRegionHoliday('Selangor')->get();
 
-		$responseObject = json_decode($response);
+        $responseObject = json_decode($response);
 
-	    $this->assertTrue($responseObject->status);
-	}
+        $this->assertTrue($responseObject->status);
+    }
 
-	/**
-	 * To test getting multiple regions holiday
-	 */ 
-	function testGetMultipleRegionsHoliday() 
-	{
-		$holiday = new Holiday;
-		$response = $holiday->getRegionHoliday(['Selangor', 'Melaka'])->get();
+    /**
+     * To test getting multiple regions holiday
+     */
+    function testGetMultipleRegionsHoliday()
+    {
+        $holiday = new Holiday;
+        $response = $holiday->getRegionHoliday(['Selangor', 'Malacca'])->get();
 
-		$responseObject = json_decode($response);
-
-	    $this->assertTrue(isset($responseObject->Selangor));
-	    $this->assertTrue(isset($responseObject->Melaka));
-	}
+        $responseObject = json_decode($response);
+        $this->assertTrue(isset($responseObject->data->Selangor));
+        $this->assertTrue(isset($responseObject->data->Malacca));
+    }
 }
