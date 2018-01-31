@@ -47,8 +47,8 @@ $holiday->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
 ```
 
 ### Requirement
-- PHP 5.6+
-- Tested in PHP 5.6, 7.0 and 7.1
+- PHP 7.1+
+- Tested in 7.1
 
 ### install
 
