@@ -1,8 +1,8 @@
 # Malaysia Holiday Date List
 Parsing Malaysia Public Holiday.
 
-[![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/MalaysiaHoliday/fb-page-feed)
-[![Coverage](https://img.shields.io/codecov/c/github/MalaysiaHoliday/fb-page-feed.svg)](https://codecov.io/gh/MalaysiaHoliday/fb-page-feed)
+[![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
+[![Coverage](https://img.shields.io/codecov/c/github/MalaysiaHoliday/fb-page-feed.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
 
 
 
