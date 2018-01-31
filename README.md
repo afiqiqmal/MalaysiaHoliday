@@ -58,7 +58,7 @@ or
 
 ```
 require{
-	"afiqiqmal/malaysiaholiday": "^1.0.5"
+	"afiqiqmal/malaysiaholiday": "^1.1.0"
 }
 ```
 
