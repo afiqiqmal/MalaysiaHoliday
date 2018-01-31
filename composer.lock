@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "521a2b504776b2e9a8f7f70930e1cae2",
+    "content-hash": "bfd37af34b4180bd34d253fb3380f22a",
     "packages": [
         {
             "name": "fabpot/goutte",
@@ -1901,7 +1901,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1"
+        "php": ">=5.3"
     },
     "platform-dev": []
 }
