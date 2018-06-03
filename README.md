@@ -3,8 +3,8 @@ Parsing Malaysia Public Holiday.
 
 [![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
 [![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/MalaysiaHoliday.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
-[![Packagist](https://img.shields.io/packagist/dt/hyn/MalaysiaHoliday.svg)](https://packagist.org/packages/hyn/MalaysiaHoliday)
-[![Packagist](https://img.shields.io/packagist/v/hyn/MalaysiaHoliday.svg)](https://packagist.org/packages/hyn/MalaysiaHoliday)
+[![Packagist](https://img.shields.io/packagist/dt/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
+[![Packagist](https://img.shields.io/packagist/v/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
 
 
 ### Usage
