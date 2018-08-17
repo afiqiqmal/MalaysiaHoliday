@@ -12,4 +12,5 @@ use afiqiqmal\MalaysiaHoliday\Holiday;
 
 $holiday = new Holiday;
 
-echo $holiday->getRegionHoliday(["Selangor","Johor"])->get();
+echo $holiday->getRegionHoliday("Selangor")->filterByMonth('January')->get();
+//echo $holiday->getAllRegionHoliday()->get();

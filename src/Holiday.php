@@ -24,7 +24,7 @@ class Holiday
         $this->client = new Client();
         $guzzleClient = new GuzzleClient(
             array(
-                'timeout' => 120,
+                'timeout' => 180,
             )
         );
         $this->client->setClient($guzzleClient);
@@ -38,14 +38,16 @@ class Holiday
         return new self;
     }
 
-    public function getAllRegionHoliday($year = 2017)
+    public function getAllRegionHoliday($year = null)
     {
+        $year = $year ? $year : date('Y');
         $this->result = $this->baseRequest(null, $year);
         return $this;
     }
 
-    public function getRegionHoliday($region, $year = 2017)
+    public function getRegionHoliday($region, $year = null)
     {
+        $year = $year ? $year : date('Y');
         $this->result = $this->baseRequest($region, $year);
         return $this;
     }
@@ -65,6 +67,7 @@ class Holiday
     public function get()
     {
         if ($this->result['status']) {
+            $temp = [];
             if ($this->month != null && $this->checkMonth($this->month)) {
                 foreach ($this->result['data'] as $key => $holiday) {
                     if (date('F', strtotime($holiday['date'])) == $this->month) {
@@ -143,13 +146,16 @@ class Holiday
     }
 
     private function trigger($region, $currentYear) {
-        if ($this->checkRegional($region)) {
-            $request_url = $this->base_url.$this->regional_path."?list_year=$currentYear&list_region=$region";
-        } else {
-            return [
-                'status' => false,
-                'message' => $region." is not include in the regional state"
-            ];
+        $request_url = $this->base_url;
+        if ($region) {
+            if ($this->checkRegional($region)) {
+                $request_url = $request_url . $this->regional_path . "?list_year=$currentYear&list_region=$region";
+            } else {
+                return [
+                    'status' => false,
+                    'message' => $region . " is not include in the regional state"
+                ];
+            }
         }
 
         $arrays = array_values(array_filter($this->crawl($request_url, $currentYear)));
@@ -168,18 +174,25 @@ class Holiday
                     if ($date_str == null || empty($date_str)) {
                         return null;
                     }
-                    $temp['date'] = date_format(date_create_from_format('F d Y', $date_str), 'd-m-Y');
+
+                    $date = date_create_from_format('F d Y', $date_str);
+                    if (!$date) { //check another format
+                        $date = date_create_from_format('Y-m-d',  $node->children()->eq(1)->children()->text());
+                    }
+
+                    $temp['date'] = date_format($date, 'Y-m-d');
+                    $temp['date_formatted'] = date_format($date, 'd F Y');
                     $temp['month'] = date('F', strtotime($temp['date']));
                     $temp['name'] = trim($node->children()->eq(2)->text());
                     $temp['description'] = trim($node->children()->eq(3)->text());
-                    $temp['status'] = true;
+                    $temp['is_holiday'] = true;
                     switch ($node->extract('class')[0]) {
                         case 'govt_holiday':
                             $temp['type'] = "Government/Public Sector Holiday";
                             break;
                         case 'publicholiday':
                             $temp['type'] = "Not a Public Holiday";
-                            $temp['status'] = false;
+                            $temp['is_holiday'] = false;
                             break;
                         case 'holiday':
                             $temp['type'] = "National Holiday";

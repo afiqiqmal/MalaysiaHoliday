@@ -64,6 +64,43 @@ require{
 ```
 
 
+### Sample
+<pre>
+    {
+        "status": true,
+        "regional": "Selangor",
+        "year": "2018",
+        "data": [
+            {
+                "day": "Monday",
+                "date": "2018-01-01",
+                "date_formatted": "01 January 2018",
+                "month": "January",
+                "name": "New Year's Day",
+                "description": "All regions except Johor, Kedah, Kelantan, Perlis, Terengganu",
+                "is_holiday": true,
+                "type": "Regional Holiday"
+            },
+            {
+                "day": "Wednesday",
+                "date": "2018-01-31",
+                "date_formatted": "31 January 2018",
+                "month": "January",
+                "name": "Thaipusam",
+                "description": "Hindu festival",
+                "is_holiday": true,
+                "type": "Regional Holiday"
+            }
+        ],
+            "sources": null,
+            "developer": {
+            "name": "Hafiq",
+            "email": "hafiqiqmal93@gmail.com",
+            "github": "https://github.com/afiqiqmal"
+        }
+    }
+</pre>
+
 ### Source
 Scraped from - http://www.officeholidays.com/countries/malaysia
 
