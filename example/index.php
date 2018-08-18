@@ -12,5 +12,8 @@ use afiqiqmal\MalaysiaHoliday\Holiday;
 
 $holiday = new Holiday;
 
-echo $holiday->getRegionHoliday("Selangor")->filterByMonth('January')->get();
-//echo $holiday->getAllRegionHoliday()->get();
+$result = $holiday->getRegionHoliday(['Selangor', 'Malacca'])->get();
+
+//print_r($result);
+header('Content-Type: application/json');
+echo json_encode($result['data']['Selangor']);

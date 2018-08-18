@@ -77,8 +77,7 @@ class Holiday
 
                 $this->result['data'] = $temp;
 
-                header('Content-Type: application/json');
-                return json_encode($this->result, JSON_PRETTY_PRINT);
+                return $this->result;
             } elseif ($this->groupByMonth) {
                 foreach ($this->result['data'] as $key => $holiday) {
                     $temp[date('F', strtotime($holiday['date']))][] = $holiday;
@@ -86,11 +85,9 @@ class Holiday
 
                 $this->result['data'] = $temp;
 
-                header('Content-Type: application/json');
-                return json_encode($this->result, JSON_PRETTY_PRINT);
+                return $this->result;
             } else {
-                header('Content-Type: application/json');
-                return json_encode($this->result, JSON_PRETTY_PRINT);
+                return $this->result;
             }
         } else {
             return [

@@ -21,9 +21,7 @@ class RequestTest extends TestCase
         $holiday = new Holiday;
         $response = $holiday->getAllRegionHoliday()->get();
 
-        $responseObject = json_decode($response);
-
-        $this->assertTrue($responseObject->status);
+        $this->assertTrue($response['status']);
     }
 
     /**
@@ -34,9 +32,7 @@ class RequestTest extends TestCase
         $holiday = new Holiday;
         $response = $holiday->getRegionHoliday('Selangor')->get();
 
-        $responseObject = json_decode($response);
-
-        $this->assertTrue($responseObject->status);
+        $this->assertTrue($response['status']);
     }
 
     /**
@@ -47,8 +43,7 @@ class RequestTest extends TestCase
         $holiday = new Holiday;
         $response = $holiday->getRegionHoliday(['Selangor', 'Malacca'])->get();
 
-        $responseObject = json_decode($response);
-        $this->assertTrue(isset($responseObject->data->Selangor));
-        $this->assertTrue(isset($responseObject->data->Malacca));
+        $this->assertTrue(isset($response['data']['Selangor']));
+        $this->assertTrue(isset($response['data']['Malacca']));
     }
 }
