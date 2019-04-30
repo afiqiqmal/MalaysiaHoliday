@@ -2,6 +2,8 @@
 
 namespace afiqiqmal\MalaysiaHoliday;
 
+use Carbon\Carbon;
+use DateTime;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -172,10 +174,12 @@ class Holiday
                         return null;
                     }
 
-                    $date = date_create_from_format('F d Y', $date_str);
+                    $date = Carbon::createFromFormat('F d Y', preg_replace("/[\n\r]/","", $date_str));
+
                     if (!$date) { //check another format
                         $date = date_create_from_format('Y-m-d',  $node->children()->eq(1)->children()->text());
                     }
+
 
                     $temp['date'] = date_format($date, 'Y-m-d');
                     $temp['date_formatted'] = date_format($date, 'd F Y');
