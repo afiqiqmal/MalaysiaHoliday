@@ -174,7 +174,7 @@ class Holiday
                         return null;
                     }
 
-                    $date = Carbon::createFromFormat('F d Y', preg_replace("/[\n\r]/","", $date_str));
+                    $date = date_create_from_format('F d Y', preg_replace("/[\n\r]/","", $date_str));
 
                     if (!$date) { //check another format
                         $date = date_create_from_format('Y-m-d',  $node->children()->eq(1)->children()->text());
