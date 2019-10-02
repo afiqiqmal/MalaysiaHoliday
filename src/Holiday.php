@@ -2,26 +2,57 @@
 
 namespace afiqiqmal\MalaysiaHoliday;
 
-use Carbon\Carbon;
-use DateTime;
+use afiqiqmal\MalaysiaHoliday\exception\RegionException;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 
 class Holiday
 {
-    private $base_url;
-    private $regional_path;
+    private $months_array = [
+        1 => 'January',
+        2 => 'February',
+        3 => 'March',
+        4 => 'April',
+        5 => 'May',
+        6 => 'June',
+        7 => 'July',
+        8 => 'August',
+        9 => 'September',
+        10 => 'October',
+        11 => 'November',
+        12 => 'December'
+    ];
 
+    private $region_array = [
+        'Johor',
+        'Kedah',
+        'Kelantan',
+        'Kuala Lumpur',
+        'Labuan',
+        'Malacca',
+        'Negeri Sembilan',
+        'Pahang',
+        'Penang',
+        'Perak',
+        'Perlis',
+        'Putrajaya',
+        'Sarawak',
+        'Selangor',
+        'Terengganu'
+    ];
+
+    private $base_url;
     private $client;
-    private $result;
+
+    private $year;
+    private $region;
 
     private $month;
     private $groupByMonth = false;
 
     public function __construct()
     {
-        $this->base_url = "http://www.officeholidays.com/countries/malaysia";
-        $this->regional_path = "/regional.php";
+        $this->base_url = "https://www.officeholidays.com/countries/malaysia";
 
         $this->client = new Client();
         $guzzleClient = new GuzzleClient(
@@ -42,15 +73,15 @@ class Holiday
 
     public function getAllRegionHoliday($year = null)
     {
-        $year = $year ? $year : date('Y');
-        $this->result = $this->baseRequest(null, $year);
+        $this->region = null;
+        $this->year = $year;
         return $this;
     }
 
     public function getRegionHoliday($region, $year = null)
     {
-        $year = $year ? $year : date('Y');
-        $this->result = $this->baseRequest($region, $year);
+        $this->region = $region;
+        $this->year = $year;
         return $this;
     }
 
@@ -68,28 +99,49 @@ class Holiday
 
     public function get()
     {
-        if ($this->result['status']) {
-            $temp = [];
+        $result = $this->queryWeb($this->region, $this->year);
+
+        if ($result['status']) {
             if ($this->month != null && $this->checkMonth($this->month)) {
-                foreach ($this->result['data'] as $key => $holiday) {
-                    if (date('F', strtotime($holiday['date'])) == $this->month) {
-                        $temp[] = $holiday;
+                foreach ($result['data'] as $key => $data) { //regional
+                    foreach ($data['collection'] as $index => $collection) { //year
+                        $temp = [];
+                        foreach ($collection['data'] as $key2 => $holiday) { // holidays
+                            $month = date('F', strtotime($holiday['date']));
+                            if (strtolower($month) == $this->getMonth($this->month)) {
+                                $temp[] = $holiday;
+                            }
+                        }
+
+                        $result['data'][$key]['collection'][$index]['data'] = $temp;
                     }
                 }
 
-                $this->result['data'] = $temp;
-
-                return $this->result;
+                return $result;
             } elseif ($this->groupByMonth) {
-                foreach ($this->result['data'] as $key => $holiday) {
-                    $temp[date('F', strtotime($holiday['date']))][] = $holiday;
+                foreach ($result['data'] as $key => $data) { //regional
+                    foreach ($data['collection'] as $index => $collection) { //year
+                        $temp = [];
+                        foreach ($collection['data'] as $key2 => $holiday) { // holidays
+                            $month = date('F', strtotime($holiday['date']));
+                            $entry = array_search($month, array_column($temp, 'month'));
+                            if ($entry === false) {
+                                $temp[] = [
+                                    'month' => $month,
+                                    'data' => [$holiday],
+                                ];
+                            } else {
+                                $temp[$entry]['data'][] = $holiday;
+                            }
+                        }
+
+                        $result['data'][$key]['collection'][$index]['data'] = $temp;
+                    }
                 }
 
-                $this->result['data'] = $temp;
-
-                return $this->result;
+                return $result;
             } else {
-                return $this->result;
+                return $result;
             }
         } else {
             return [
@@ -99,62 +151,71 @@ class Holiday
         }
     }
 
-    private function baseRequest($region, $year)
-    {
-        return $this->queryWeb($region, $year);
-    }
-
     private function queryWeb($regional, $year)
     {
-        try {
-            $arrays = [];
-            $request_url = null;
-            $currentYear = ($year==null) ? date('Y') : $year;
-            if ($regional == null) {
-                $request_url = $this->base_url."/".$year.".php";
-                $arrays = $this->trigger($regional, $currentYear);
-            } else {
-                if (is_array($regional)) {
-                    foreach ($regional as $region) {
-                        $arrays[$region] = $this->trigger($region, $currentYear);
-                    }
-                } else {
-                    $arrays = $this->trigger($regional, $currentYear);
-                }
-            }
-
-            return [
-                'status' => true,
-                'regional' => ($regional == null) ? "all" : (is_array($regional) ? explode(",", $regional) : $regional),
-                'year'=> $currentYear,
-                'data' => $arrays,
-                'sources' => $request_url,
-                'developer' => [
-                    "name"=> "Hafiq",
-                    "email"=> "hafiqiqmal93@gmail.com",
-                    "github"=> "https://github.com/afiqiqmal"
-                ]
-            ];
-
-        } catch (\Exception $e) {
-            return [
-                'status' => false,
-                'message' => "Something went wrong or not exist yet"
-            ];
+        $years = ($year == null) ? [date('Y')] : $year;
+        if (!is_array($years)) {
+            $years = [$year];
         }
-    }
 
-    private function trigger($region, $currentYear) {
-        $request_url = $this->base_url;
-        if ($region) {
-            if ($this->checkRegional($region)) {
-                $request_url = $request_url . $this->regional_path . "?list_year=$currentYear&list_region=$region";
-            } else {
-                return [
-                    'status' => false,
-                    'message' => $region . " is not include in the regional state"
+        if (!is_array($regional)) {
+            $regional = [$regional];
+        }
+
+        $final = [];
+        $error_messages = [];
+        foreach ($regional as $region) {
+            $data = [];
+            try {
+                foreach ($years as $selectedYear) {
+                    $data[] = [
+                        'year' => (int)$selectedYear,
+                        'data' => $this->trigger($region, $selectedYear),
+                    ];
+                }
+
+                $final[] = [
+                    'regional' => $region ?? "Malaysia",
+                    'collection' => $data
+                ];
+            } catch (RegionException $regionException) {
+                $error_messages[] = $regionException->getMessage();
+                $final[] = [
+                    'regional' => $region ?? "Malaysia",
+                    'collection' => []
                 ];
             }
+        }
+
+        return [
+            'status' => true,
+            'data' => $final ?? [],
+            'error_messages' => $error_messages,
+            'developer' => [
+                "name" => "Hafiq",
+                "email" => "hafiqiqmal93@gmail.com",
+                "github" => "https://github.com/afiqiqmal"
+            ]
+        ];
+    }
+
+    /**
+     *
+     * @param $region
+     * @param $currentYear
+     * @return array
+     * @throws RegionException
+     */
+    private function trigger($region, $currentYear)
+    {
+        if ($region) {
+            if ($this->checkRegional($region)) {
+                $request_url = $this->base_url."/".$region."/".$currentYear;
+            } else {
+                throw new RegionException($region . " is not include in the regional state");
+            }
+        } else {
+            $request_url = $this->base_url."/".$currentYear;
         }
 
         $arrays = array_values(array_filter($this->crawl($request_url, $currentYear)));
@@ -165,21 +226,22 @@ class Holiday
     private function crawl($request_url, $currentYear)
     {
         $crawler = $this->client->request('GET', $request_url);
-        $result = $crawler->filter('.list-table tr')->each(
+        $result = $crawler->filter('.country-table tr')->each(
             function ($node) use ($currentYear) {
                 if ($node->children()->nodeName() == 'td') {
                     $temp['day'] = trim($node->children()->eq(0)->text());
-                    $date_str = strtok(trim($node->children()->eq(1)->extract('_text', 'class')[0]), "\n")." ".$currentYear;
+                    $date_str = strtok(trim($node->children()
+                            ->eq(1)
+                            ->extract('_text', 'class')[0]), "\n")." ".$currentYear;
                     if ($date_str == null || empty($date_str)) {
                         return null;
                     }
 
-                    $date = date_create_from_format('F d Y', preg_replace("/[\n\r]/","", $date_str));
+                    $date = date_create_from_format('F d Y', preg_replace("/[\n\r]/", "", $date_str));
 
                     if (!$date) { //check another format
-                        $date = date_create_from_format('Y-m-d',  $node->children()->eq(1)->children()->text());
+                        $date = date_create_from_format('Y-m-d', $node->children()->eq(1)->children()->text());
                     }
-
 
                     $temp['date'] = date_format($date, 'Y-m-d');
                     $temp['date_formatted'] = date_format($date, 'd F Y');
@@ -187,22 +249,30 @@ class Holiday
                     $temp['name'] = trim($node->children()->eq(2)->text());
                     $temp['description'] = trim($node->children()->eq(3)->text());
                     $temp['is_holiday'] = true;
-                    switch ($node->extract('class')[0]) {
+                    switch (trim($node->extract('class')[0])) {
                         case 'govt_holiday':
                             $temp['type'] = "Government/Public Sector Holiday";
+                            $temp['type_id'] = 1;
                             break;
-                        case 'publicholiday':
+                        case 'nap-past':
+                        case 'nap':
                             $temp['type'] = "Not a Public Holiday";
                             $temp['is_holiday'] = false;
+                            $temp['type_id'] = 2;
                             break;
-                        case 'holiday':
+                        case 'country-past':
+                        case 'country':
                             $temp['type'] = "National Holiday";
+                            $temp['type_id'] = 3;
                             break;
-                        case 'regional':
+                        case 'region-past':
+                        case 'region':
                             $temp['type'] = "Regional Holiday";
+                            $temp['type_id'] = 4;
                             break;
                         default:
                             $temp['type'] = "Unknown";
+                            $temp['type_id'] = 5;
                             break;
                     }
 
@@ -216,24 +286,7 @@ class Holiday
 
     private function checkRegional($regional)
     {
-        $arrays = array(
-            'Johor',
-            'Kedah',
-            'Kelantan',
-            'Kuala Lumpur',
-            'Labuan',
-            'Malacca',
-            'Negeri Sembilan',
-            'Pahang',
-            'Penang',
-            'Perak',
-            'Perlis',
-            'Putrajaya',
-            'Sarawak',
-            'Selangor',
-            'Terengganu'
-        );
-        if (in_array(strtolower($regional), array_map('strtolower', $arrays))) {
+        if (in_array(strtolower($regional), array_map('strtolower', $this->region_array))) {
             return true;
         }
         return false;
@@ -241,24 +294,16 @@ class Holiday
 
     private function checkMonth($month)
     {
-        $arrays = array(
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December'
-        );
-        if (in_array(strtolower($month), array_map('strtolower', $arrays))) {
+        if (in_array(strtolower($month), array_map('strtolower', array_values($this->months_array)))) {
             return true;
         }
-        return false;
+
+        return isset($this->months_array[$month]);
+    }
+
+    private function getMonth($month)
+    {
+        return strtolower($this->months_array[$month]) ?? strtolower($month);
     }
 }
 

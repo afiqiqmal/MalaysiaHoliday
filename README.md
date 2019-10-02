@@ -20,7 +20,8 @@ Holidays in specific years
 
 ```php
 $holiday = new Holiday;
-$holiday->getAllRegionHoliday("2017")->get();
+$holiday->getAllRegionHoliday(2017)->get();
+$holiday->getAllRegionHoliday([2017, 2019])->get();
 ```
 
 Holidays by regional
@@ -36,6 +37,8 @@ Holidays by regional in 2017
 ```php
 $holiday = new Holiday;
 $holiday->getRegionHoliday("Selangor","2017")->get();
+$holiday->getRegionHoliday("Selangor", [2017, 2019])->get();
+$holiday->getRegionHoliday(["Selangor","Malacca"], [2017, 2019])->get();
 ```
 
 
@@ -48,57 +51,77 @@ $holiday->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
 ```
 
 ### Requirement
-- PHP 5.6+
-- Tested in 5.6, 7.0, 7.1
+- PHP 7.0+ (because 5.6 too old 😝)
 
 ### install
 
 `composer require afiqiqmal/malaysiaholiday`
 
-or 
-
-```
-require{
-	"afiqiqmal/malaysiaholiday": "^1.1.0"
-}
-```
-
-
 ### Sample
 <pre>
-    {
-        "status": true,
-        "regional": "Selangor",
-        "year": "2018",
-        "data": [
+{
+   "status":true,
+   "data":[
+      {
+         "regional":"Selangor",
+         "collection":[
             {
-                "day": "Monday",
-                "date": "2018-01-01",
-                "date_formatted": "01 January 2018",
-                "month": "January",
-                "name": "New Year's Day",
-                "description": "All regions except Johor, Kedah, Kelantan, Perlis, Terengganu",
-                "is_holiday": true,
-                "type": "Regional Holiday"
-            },
-            {
-                "day": "Wednesday",
-                "date": "2018-01-31",
-                "date_formatted": "31 January 2018",
-                "month": "January",
-                "name": "Thaipusam",
-                "description": "Hindu festival",
-                "is_holiday": true,
-                "type": "Regional Holiday"
+               "year":2019,
+               "data":[
+                  {
+                     "day":"Tuesday",
+                     "date":"2019-01-01",
+                     "date_formatted":"01 January 2019",
+                     "month":"January",
+                     "name":"New Year's Day",
+                     "description":"Regional Holiday",
+                     "is_holiday":true,
+                     "type":"Regional Holiday",
+                     "type_id":4
+                  },
+                  {
+                     "day":"Monday",
+                     "date":"2019-01-21",
+                     "date_formatted":"21 January 2019",
+                     "month":"January",
+                     "name":"Thaipusam",
+                     "description":"Regional Holiday",
+                     "is_holiday":true,
+                     "type":"Regional Holiday",
+                     "type_id":4
+                  }
+               ]
             }
-        ],
-            "sources": null,
-            "developer": {
-            "name": "Hafiq",
-            "email": "hafiqiqmal93@gmail.com",
-            "github": "https://github.com/afiqiqmal"
-        }
-    }
+         ]
+      },
+      {
+         "regional":"Johor",
+         "collection":[
+            {
+               "year":2019,
+               "data":[
+                  {
+                     "day":"Monday",
+                     "date":"2019-01-21",
+                     "date_formatted":"21 January 2019",
+                     "month":"January",
+                     "name":"Thaipusam",
+                     "description":"Regional Holiday",
+                     "is_holiday":true,
+                     "type":"Regional Holiday",
+                     "type_id":4
+                  }
+               ]
+            }
+         ]
+      }
+   ],
+   "developer":{
+      "name":"Hafiq",
+      "email":"hafiqiqmal93@gmail.com",
+      "github":"https://github.com/afiqiqmal"
+   }
+}
 </pre>
 
 ### Source
