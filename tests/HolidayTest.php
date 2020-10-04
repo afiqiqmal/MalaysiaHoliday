@@ -19,7 +19,7 @@ class RequestTest extends TestCase
     public function testGetAllRegionHoliday()
     {
         $holiday = new Holiday;
-        $response = $holiday->getAllRegionHoliday()->get();
+        $response = $holiday->fromAllState()->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Malaysia');
@@ -31,7 +31,7 @@ class RequestTest extends TestCase
     public function testGetSpecificRegionHoliday()
     {
         $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday('Selangor')->get();
+        $response = $holiday->fromState('Selangor')->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -43,7 +43,7 @@ class RequestTest extends TestCase
     public function testGetMultipleRegionsHoliday()
     {
         $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday(['Selangor', 'Malacca'])->get();
+        $response = $holiday->fromState(['Selangor', 'Malacca'])->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -56,7 +56,7 @@ class RequestTest extends TestCase
     public function testErrorMessage()
     {
         $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday(['Selangor', 'Malaccaa'])->get();
+        $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');

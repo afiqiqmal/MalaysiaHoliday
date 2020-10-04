@@ -12,33 +12,37 @@ Parsing Malaysia Public Holiday.
 Holidays in current years
 
 ```php
-$holiday = new Holiday;
-$holiday->getAllRegionHoliday()->get();
+$holiday = new Holiday; // Holiday::make()
+$holiday->fromAllState()->get();
+Holiday::make()->fromAllState()->get();
 ```
 
 Holidays in specific years
 
 ```php
 $holiday = new Holiday;
-$holiday->getAllRegionHoliday(2017)->get();
-$holiday->getAllRegionHoliday([2017, 2019])->get();
+$holiday->fromAllState(2017)->get();
+$holiday->fromAllState([2017, 2019])->get();
+$holiday->fromAllState()->ofYear(2017)->get();
+Holiday::make()->fromAllState()->ofYear(2017)->get();
 ```
 
 Holidays by regional
 
 ```php
 $holiday = new Holiday;
-$holiday->getRegionHoliday("Selangor")->get();
-$holiday->getRegionHoliday(["Selangor","Malacca"])->get();
+$holiday->fromState("Selangor")->get();
+$holiday->fromState(["Selangor","Malacca"])->get();
 ```
 
 Holidays by regional in 2017
 
 ```php
 $holiday = new Holiday;
-$holiday->getRegionHoliday("Selangor","2017")->get();
-$holiday->getRegionHoliday("Selangor", [2017, 2019])->get();
-$holiday->getRegionHoliday(["Selangor","Malacca"], [2017, 2019])->get();
+$holiday->fromState("Selangor","2017")->get();
+$holiday->fromState("Selangor", [2017, 2019])->get();
+$holiday->fromState(["Selangor","Malacca"], [2017, 2019])->get();
+$holiday->fromState(["Selangor","Malacca"])->ofYear([2017, 2019])->get();
 ```
 
 
@@ -46,8 +50,8 @@ Grouping and Filter result
 
 ```php
 $holiday = new Holiday;
-$holiday->getAllRegionHoliday()->groupByMonth()->get();
-$holiday->getAllRegionHoliday()->filterByMonth("January")->get();  //date('F')
+$holiday->fromAllState()->groupByMonth()->get();
+$holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 ```
 
 ### Requirement
