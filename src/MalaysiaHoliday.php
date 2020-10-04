@@ -24,13 +24,13 @@ class MalaysiaHoliday
         12 => 'December'
     ];
 
-    private $region_array = [
+    public static $region_array = [
         'Johor',
         'Kedah',
         'Kelantan',
         'Kuala Lumpur',
         'Labuan',
-        'Malacca',
+        'Melaka',
         'Negeri Sembilan',
         'Pahang',
         'Penang',
@@ -45,7 +45,7 @@ class MalaysiaHoliday
     private $related_region = [
         'Johore' => 'Johor',
         'KL' => 'Kuala Lumpur',
-        'Melaka' => 'Malacca',
+        'Malacca' => 'Melaka',
         'Pulau Pinang' => 'Penang'
     ];
 
@@ -177,11 +177,6 @@ class MalaysiaHoliday
                     ];
                 }
 
-                $final[] = [
-                    'regional' => $region ?? "Malaysia",
-                    'collection' => $data
-                ];
-
                 if ($region) {
                     $final[] = [
                         'regional' => $region,
@@ -300,7 +295,7 @@ class MalaysiaHoliday
             }
         }
 
-        if (in_array(strtolower($regional), array_map('strtolower', $this->region_array))) {
+        if (in_array(strtolower($regional), array_map('strtolower', self::$region_array))) {
             return str_replace(" ", "-", $regional);
         }
 

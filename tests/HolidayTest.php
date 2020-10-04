@@ -22,7 +22,7 @@ class RequestTest extends TestCase
         $response = $holiday->fromAllState()->get();
 
         $this->assertTrue($response['status']);
-        $this->assertTrue($response['data'][0]['regional'] == 'Malaysia');
+        $this->assertTrue($response['data']['regional'] == 'Malaysia');
     }
 
     /**
@@ -48,6 +48,17 @@ class RequestTest extends TestCase
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
         $this->assertTrue($response['data'][1]['regional'] == 'Malacca');
+    }
+
+    public function testGetAllRegionsHoliday()
+    {
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromState(MalaysiaHoliday::$region_array)->get();
+
+        $this->assertTrue($response['status']);
+        foreach (MalaysiaHoliday::$region_array as $key => $regional) {
+            $this->assertTrue($response['data'][$key]['regional'] == $regional);
+        }
     }
 
     /**

@@ -12,7 +12,7 @@ use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
 
 $holiday = new MalaysiaHoliday;
 
-$result = $holiday->fromState(["Selangor","Malacca"])->ofYear([2017, 2019])->get();
+$result = $holiday->fromState(MalaysiaHoliday::$region_array)->get();
 
 //print_r($result);
 header('Content-Type: application/json');
