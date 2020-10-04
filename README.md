@@ -5,6 +5,7 @@ Parsing Malaysia Public Holiday.
 [![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/MalaysiaHoliday.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
 [![Packagist](https://img.shields.io/packagist/dt/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
 [![Packagist](https://img.shields.io/packagist/v/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/mhi9388?locale.x=en_US)
 
 
 ### Usage
@@ -12,25 +13,25 @@ Parsing Malaysia Public Holiday.
 Holidays in current years
 
 ```php
-$holiday = new Holiday; // Holiday::make()
+$holiday = new MalaysiaHoliday; // MalaysiaHoliday::make()
 $holiday->fromAllState()->get();
-Holiday::make()->fromAllState()->get();
+MalaysiaHoliday::make()->fromAllState()->get();
 ```
 
 Holidays in specific years
 
 ```php
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 $holiday->fromAllState(2017)->get();
 $holiday->fromAllState([2017, 2019])->get();
 $holiday->fromAllState()->ofYear(2017)->get();
-Holiday::make()->fromAllState()->ofYear(2017)->get();
+MalaysiaHoliday::make()->fromAllState()->ofYear(2017)->get();
 ```
 
 Holidays by regional
 
 ```php
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 $holiday->fromState("Selangor")->get();
 $holiday->fromState(["Selangor","Malacca"])->get();
 ```
@@ -38,7 +39,7 @@ $holiday->fromState(["Selangor","Malacca"])->get();
 Holidays by regional in 2017
 
 ```php
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 $holiday->fromState("Selangor","2017")->get();
 $holiday->fromState("Selangor", [2017, 2019])->get();
 $holiday->fromState(["Selangor","Malacca"], [2017, 2019])->get();
@@ -49,7 +50,7 @@ $holiday->fromState(["Selangor","Malacca"])->ofYear([2017, 2019])->get();
 Grouping and Filter result
 
 ```php
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 $holiday->fromAllState()->groupByMonth()->get();
 $holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 ```
@@ -155,3 +156,8 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+<a href="https://www.paypal.com/paypalme/mhi9388?locale.x=en_US"><img src="https://i.imgur.com/Y2gqr2j.png" height="40"></a>  
+

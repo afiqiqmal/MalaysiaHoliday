@@ -5,7 +5,7 @@ namespace Tests;
 require_once __DIR__ .'/../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
-use afiqiqmal\MalaysiaHoliday\Holiday;
+use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
 
 /**
  * RequestTest.php
@@ -18,7 +18,7 @@ class RequestTest extends TestCase
      */
     public function testGetAllRegionHoliday()
     {
-        $holiday = new Holiday;
+        $holiday = new MalaysiaHoliday;
         $response = $holiday->fromAllState()->get();
 
         $this->assertTrue($response['status']);
@@ -30,7 +30,7 @@ class RequestTest extends TestCase
      */
     public function testGetSpecificRegionHoliday()
     {
-        $holiday = new Holiday;
+        $holiday = new MalaysiaHoliday;
         $response = $holiday->fromState('Selangor')->get();
 
         $this->assertTrue($response['status']);
@@ -42,7 +42,7 @@ class RequestTest extends TestCase
      */
     public function testGetMultipleRegionsHoliday()
     {
-        $holiday = new Holiday;
+        $holiday = new MalaysiaHoliday;
         $response = $holiday->fromState(['Selangor', 'Malacca'])->get();
 
         $this->assertTrue($response['status']);
@@ -55,7 +55,7 @@ class RequestTest extends TestCase
      */
     public function testErrorMessage()
     {
-        $holiday = new Holiday;
+        $holiday = new MalaysiaHoliday;
         $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
 
         $this->assertTrue($response['status']);

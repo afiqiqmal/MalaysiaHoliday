@@ -7,7 +7,7 @@ use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use function GuzzleHttp\Psr7\str;
 
-class Holiday
+class MalaysiaHoliday
 {
     private $months_array = [
         1 => 'January',

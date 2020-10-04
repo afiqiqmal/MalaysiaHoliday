@@ -8,9 +8,9 @@
 
 require_once __DIR__ .'/../vendor/autoload.php';
 
-use afiqiqmal\MalaysiaHoliday\Holiday;
+use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
 
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 
 $result = $holiday->fromState(["Selangor","Malacca"])->ofYear([2017, 2019])->get();
 
