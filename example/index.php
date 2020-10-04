@@ -8,11 +8,11 @@
 
 require_once __DIR__ .'/../vendor/autoload.php';
 
-use afiqiqmal\MalaysiaHoliday\Holiday;
+use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
 
-$holiday = new Holiday;
+$holiday = new MalaysiaHoliday;
 
-$result = $holiday->getRegionHoliday(['Selangor', 'Johore'])->filterByMonth(1)->get();
+$result = $holiday->fromState(MalaysiaHoliday::$region_array)->get();
 
 //print_r($result);
 header('Content-Type: application/json');

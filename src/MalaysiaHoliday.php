@@ -5,8 +5,9 @@ namespace afiqiqmal\MalaysiaHoliday;
 use afiqiqmal\MalaysiaHoliday\exception\RegionException;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
+use function GuzzleHttp\Psr7\str;
 
-class Holiday
+class MalaysiaHoliday
 {
     private $months_array = [
         1 => 'January',
@@ -23,13 +24,13 @@ class Holiday
         12 => 'December'
     ];
 
-    private $region_array = [
+    public static $region_array = [
         'Johor',
         'Kedah',
         'Kelantan',
         'Kuala Lumpur',
         'Labuan',
-        'Malacca',
+        'Melaka',
         'Negeri Sembilan',
         'Pahang',
         'Penang',
@@ -41,7 +42,14 @@ class Holiday
         'Terengganu'
     ];
 
-    private $base_url;
+    private $related_region = [
+        'Johore' => 'Johor',
+        'KL' => 'Kuala Lumpur',
+        'Malacca' => 'Melaka',
+        'Pulau Pinang' => 'Penang'
+    ];
+
+    private $base_url = "https://www.officeholidays.com/countries/malaysia";
     private $client;
 
     private $year;
@@ -52,35 +60,30 @@ class Holiday
 
     public function __construct()
     {
-        $this->base_url = "https://www.officeholidays.com/countries/malaysia";
-
         $this->client = new Client();
-        $guzzleClient = new GuzzleClient(
-            array(
-                'timeout' => 180,
-            )
-        );
-        $this->client->setClient($guzzleClient);
-
-        error_reporting(0);
     }
 
-    //Holiday holiday = new Holiday;
-    public static function init()
+    public static function make()
     {
         return new self;
     }
 
-    public function getAllRegionHoliday($year = null)
+    public function fromAllState($year = null)
     {
         $this->region = null;
         $this->year = $year;
         return $this;
     }
 
-    public function getRegionHoliday($region, $year = null)
+    public function fromState($region, $year = null)
     {
         $this->region = $region;
+        $this->year = $year;
+        return $this;
+    }
+
+    public function ofYear($year)
+    {
         $this->year = $year;
         return $this;
     }
@@ -174,10 +177,17 @@ class Holiday
                     ];
                 }
 
-                $final[] = [
-                    'regional' => $region ?? "Malaysia",
-                    'collection' => $data
-                ];
+                if ($region) {
+                    $final[] = [
+                        'regional' => $region,
+                        'collection' => $data
+                    ];
+                } else {
+                    $final = [
+                        'regional' => "Malaysia",
+                        'collection' => $data
+                    ];
+                }
             } catch (RegionException $regionException) {
                 $error_messages[] = $regionException->getMessage();
                 $final[] = [
@@ -209,30 +219,24 @@ class Holiday
     private function trigger($region, $currentYear)
     {
         if ($region) {
-            if ($this->checkRegional($region)) {
-                $request_url = $this->base_url."/".$region."/".$currentYear;
-            } else {
-                throw new RegionException($region . " is not include in the regional state");
-            }
+            $request_url = $this->base_url."/".$this->checkRegional($region)."/".$currentYear;
         } else {
             $request_url = $this->base_url."/".$currentYear;
         }
 
-        $arrays = array_values(array_filter($this->crawl($request_url, $currentYear)));
-
-        return $arrays;
+        return array_values(array_filter($this->crawl($request_url, $currentYear)));
     }
 
     private function crawl($request_url, $currentYear)
     {
         $crawler = $this->client->request('GET', $request_url);
-        $result = $crawler->filter('.country-table tr')->each(
+        return $crawler->filter('.country-table tr')->each(
             function ($node) use ($currentYear) {
                 if ($node->children()->nodeName() == 'td') {
                     $temp['day'] = trim($node->children()->eq(0)->text());
                     $date_str = strtok(trim($node->children()
                             ->eq(1)
-                            ->extract('_text', 'class')[0]), "\n")." ".$currentYear;
+                            ->extract(['_text', 'class'])[0][0]), "\n")." ".$currentYear;
                     if ($date_str == null || empty($date_str)) {
                         return null;
                     }
@@ -249,7 +253,7 @@ class Holiday
                     $temp['name'] = trim($node->children()->eq(2)->text());
                     $temp['description'] = trim($node->children()->eq(3)->text());
                     $temp['is_holiday'] = true;
-                    switch (trim($node->extract('class')[0])) {
+                    switch (trim($node->extract(['class'])[0])) {
                         case 'govt_holiday':
                             $temp['type'] = "Government/Public Sector Holiday";
                             $temp['type_id'] = 1;
@@ -280,16 +284,22 @@ class Holiday
                 }
             }
         );
-
-        return $result;
     }
 
     private function checkRegional($regional)
     {
-        if (in_array(strtolower($regional), array_map('strtolower', $this->region_array))) {
-            return true;
+        foreach ($this->related_region as $index => $state) {
+            if (strtolower($index) == strtolower($regional)) {
+                $regional = $state;
+                break;
+            }
         }
-        return false;
+
+        if (in_array(strtolower($regional), array_map('strtolower', self::$region_array))) {
+            return str_replace(" ", "-", $regional);
+        }
+
+        throw new RegionException($regional . " is not include in the regional state");
     }
 
     private function checkMonth($month)

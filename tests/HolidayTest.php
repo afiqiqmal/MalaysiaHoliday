@@ -5,7 +5,7 @@ namespace Tests;
 require_once __DIR__ .'/../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
-use afiqiqmal\MalaysiaHoliday\Holiday;
+use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
 
 /**
  * RequestTest.php
@@ -18,11 +18,11 @@ class RequestTest extends TestCase
      */
     public function testGetAllRegionHoliday()
     {
-        $holiday = new Holiday;
-        $response = $holiday->getAllRegionHoliday()->get();
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromAllState()->get();
 
         $this->assertTrue($response['status']);
-        $this->assertTrue($response['data'][0]['regional'] == 'Malaysia');
+        $this->assertTrue($response['data']['regional'] == 'Malaysia');
     }
 
     /**
@@ -30,8 +30,8 @@ class RequestTest extends TestCase
      */
     public function testGetSpecificRegionHoliday()
     {
-        $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday('Selangor')->get();
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromState('Selangor')->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -42,12 +42,23 @@ class RequestTest extends TestCase
      */
     public function testGetMultipleRegionsHoliday()
     {
-        $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday(['Selangor', 'Malacca'])->get();
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromState(['Selangor', 'Malacca'])->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
         $this->assertTrue($response['data'][1]['regional'] == 'Malacca');
+    }
+
+    public function testGetAllRegionsHoliday()
+    {
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromState(MalaysiaHoliday::$region_array)->get();
+
+        $this->assertTrue($response['status']);
+        foreach (MalaysiaHoliday::$region_array as $key => $regional) {
+            $this->assertTrue($response['data'][$key]['regional'] == $regional);
+        }
     }
 
     /**
@@ -55,8 +66,8 @@ class RequestTest extends TestCase
      */
     public function testErrorMessage()
     {
-        $holiday = new Holiday;
-        $response = $holiday->getRegionHoliday(['Selangor', 'Malaccaa'])->get();
+        $holiday = new MalaysiaHoliday;
+        $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
