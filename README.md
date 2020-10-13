@@ -10,6 +10,14 @@ Parsing Malaysia Public Holiday.
 
 ### Usage
 
+Delare
+```php
+$holiday = new MalaysiaHoliday;
+MalaysiaHoliday::make();
+app(MalaysiaHoliday::class); // if bind with laravel refer here - https://laravel.com/docs/8.x/container#contextual-binding
+```
+
+
 Holidays in current years
 
 ```php
