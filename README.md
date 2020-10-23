@@ -1,4 +1,4 @@
-# Malaysia Holiday Date List
+# Malaysia Holidays
 Parsing Malaysia Public Holiday.
 
 [![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
