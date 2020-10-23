@@ -12,10 +12,10 @@
     ],
     "require": {
         "php": ">=7.0",
-        "fabpot/goutte": "^3.2"
+        "fabpot/goutte": "^4.0"
     },
     "require-dev": {
-        "vlucas/phpdotenv": "~2.2",
+        "vlucas/phpdotenv": "^5.2",
         "phpunit/phpunit": "~5.7"
     },
     "minimum-stability": "stable",
