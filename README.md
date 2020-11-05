@@ -8,6 +8,9 @@ Parsing Malaysia Public Holiday.
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/paypalme/mhi9388?locale.x=en_US)
 
 
+![](https://banners.beyondco.de/Malaysia%20Holiday.png?theme=dark&packageName=afiqiqmal%2Fmalaysiaholiday&pattern=cage&style=style_1&description=Parsing+Malaysia+Public+Holiday&md=1&fontSize=100px&images=globe)
+
+
 ### Usage
 
 Delare
