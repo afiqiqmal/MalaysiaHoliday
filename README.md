@@ -173,9 +173,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 <br><br>
 
-<p align="center"> ### Donate to the project :tea:
+<p align="center"> 
 
-<a href="https://www.paypal.com/paypalme/mhi9388?locale.x=en_US"><img src="https://i.imgur.com/Y2gqr2j.png" height="40"></a>  
+Donate to the project :tea:
+
+<href="https://www.paypal.com/paypalme/mhi9388?locale.x=en_US"><img src="https://i.imgur.com/Y2gqr2j.png" height="40"></a>  
 
 </p>
 
