@@ -1,5 +1,5 @@
-# Malaysia Holidays
-Parsing Malaysia Public Holiday.
+# Malaysia Holidays :airplane:
+Parsing Malaysian Public Holidays
 
 [![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
 [![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/MalaysiaHoliday.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
@@ -11,17 +11,17 @@ Parsing Malaysia Public Holiday.
 ![](https://banners.beyondco.de/Malaysia%20Holiday.png?theme=dark&packageName=afiqiqmal%2Fmalaysiaholiday&pattern=cage&style=style_1&description=Parsing+Malaysia+Public+Holiday&md=1&fontSize=100px&images=globe)
 
 
-### Usage
+### How to Use :sparkles:
 
-Delare
+Declare
 ```php
 $holiday = new MalaysiaHoliday;
 MalaysiaHoliday::make();
-app(MalaysiaHoliday::class); // if bind with laravel refer here - https://laravel.com/docs/8.x/container#contextual-binding
+app(MalaysiaHoliday::class); // if bound with laravel refer here - https://laravel.com/docs/8.x/container#contextual-binding
 ```
 
 
-Holidays in current years
+Holidays in current year
 
 ```php
 $holiday = new MalaysiaHoliday; // MalaysiaHoliday::make()
@@ -39,7 +39,7 @@ $holiday->fromAllState()->ofYear(2017)->get();
 MalaysiaHoliday::make()->fromAllState()->ofYear(2017)->get();
 ```
 
-Holidays by regional
+Holidays by region
 
 ```php
 $holiday = new MalaysiaHoliday;
@@ -47,7 +47,7 @@ $holiday->fromState("Selangor")->get();
 $holiday->fromState(["Selangor","Malacca"])->get();
 ```
 
-Holidays by regional in 2017
+Holidays by region and year
 
 ```php
 $holiday = new MalaysiaHoliday;
@@ -58,7 +58,7 @@ $holiday->fromState(["Selangor","Malacca"])->ofYear([2017, 2019])->get();
 ```
 
 
-Grouping and Filter result
+Group and filter results
 
 ```php
 $holiday = new MalaysiaHoliday;
@@ -66,10 +66,12 @@ $holiday->fromAllState()->groupByMonth()->get();
 $holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 ```
 
-### Requirement
-- PHP 7.0+ (because 5.6 too old 😝)
+### Requirements
+PHP 7.0 and above (because 5.6 is too old 😝)
 
-### install
+### To install
+
+run
 
 `composer require afiqiqmal/malaysiaholiday`
 
@@ -140,7 +142,8 @@ $holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 }
 </pre>
 
-### Source
+### Source :date:
+
 Scraped from - http://www.officeholidays.com/countries/malaysia
 
 ### MIT Licence
@@ -168,7 +171,11 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
+<br>
+
+### Donate to the project :tea: 
+
+<a href="https://www.paypal.com/paypalme/mhi9388?locale.x=en_US"><img src="https://i.imgur.com/Y2gqr2j.png" height="40"></a> 
 
 
-<a href="https://www.paypal.com/paypalme/mhi9388?locale.x=en_US"><img src="https://i.imgur.com/Y2gqr2j.png" height="40"></a>  
 
