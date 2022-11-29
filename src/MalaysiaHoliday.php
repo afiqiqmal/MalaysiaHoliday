@@ -245,6 +245,10 @@ class MalaysiaHoliday
 
                     if (!$date) { //check another format
                         $date = date_create_from_format('Y-m-d', $node->children()->eq(1)->children()->text());
+
+                        if (!$date) {
+                            return null;
+                        }
                     }
 
                     $temp['date'] = date_format($date, 'Y-m-d');
