@@ -3,7 +3,7 @@
 namespace afiqiqmal\MalaysiaHoliday;
 
 use afiqiqmal\MalaysiaHoliday\exception\RegionException;
-use Goutte\Client;
+use Symfony\Component\BrowserKit\HttpBrowser as Client;
 use GuzzleHttp\Client as GuzzleClient;
 use function GuzzleHttp\Psr7\str;
 
