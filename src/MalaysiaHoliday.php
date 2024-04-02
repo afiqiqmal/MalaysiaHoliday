@@ -4,6 +4,7 @@ namespace afiqiqmal\MalaysiaHoliday;
 
 use afiqiqmal\MalaysiaHoliday\exception\RegionException;
 use Symfony\Component\BrowserKit\HttpBrowser as Client;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use GuzzleHttp\Client as GuzzleClient;
 use function GuzzleHttp\Psr7\str;
 
@@ -58,14 +59,14 @@ class MalaysiaHoliday
     private $month;
     private $groupByMonth = false;
 
-    public function __construct()
+    public function __construct($client = null)
     {
-        $this->client = new Client();
+        $this->client = new Client($client);
     }
 
-    public static function make()
+    public static function make(HttpClientInterface $client = null): MalaysiaHoliday
     {
-        return new self;
+        return new self($client);
     }
 
     public function fromAllState($year = null)
