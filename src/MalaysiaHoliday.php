@@ -1,12 +1,11 @@
 <?php
 
-namespace afiqiqmal\MalaysiaHoliday;
+namespace Holiday;
 
-use afiqiqmal\MalaysiaHoliday\exception\RegionException;
+use Holiday\Exception\RegionException;
 use Symfony\Component\BrowserKit\HttpBrowser as Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use GuzzleHttp\Client as GuzzleClient;
-use function GuzzleHttp\Psr7\str;
 
 class MalaysiaHoliday
 {
@@ -50,14 +49,14 @@ class MalaysiaHoliday
         'Pulau Pinang' => 'Penang'
     ];
 
-    private $base_url = "https://www.officeholidays.com/countries/malaysia";
-    private $client;
+    private string $base_url = "https://www.officeholidays.com/countries/malaysia";
+    private Client $client;
 
-    private $year;
-    private $region;
+    private int|null $year = null;
+    private string|array $region = [];
 
-    private $month;
-    private $groupByMonth = false;
+    private int|null $month = null;
+    private bool $groupByMonth = false;
 
     public function __construct($client = null)
     {
@@ -69,39 +68,40 @@ class MalaysiaHoliday
         return new self($client);
     }
 
-    public function fromAllState($year = null)
+    public function fromAllState($year = null): static
     {
         $this->region = null;
         $this->year = $year;
+
         return $this;
     }
 
-    public function fromState($region, $year = null)
+    public function fromState($region, $year = null): static
     {
         $this->region = $region;
         $this->year = $year;
         return $this;
     }
 
-    public function ofYear($year)
+    public function ofYear($year): static
     {
         $this->year = $year;
         return $this;
     }
 
-    public function groupByMonth()
+    public function groupByMonth(): static
     {
         $this->groupByMonth = true;
         return $this;
     }
 
-    public function filterByMonth($month)
+    public function filterByMonth($month): static
     {
         $this->month = $month;
         return $this;
     }
 
-    public function get()
+    public function get(): array
     {
         $result = $this->queryWeb($this->region, $this->year);
 
@@ -121,7 +121,6 @@ class MalaysiaHoliday
                     }
                 }
 
-                return $result;
             } elseif ($this->groupByMonth) {
                 foreach ($result['data'] as $key => $data) { //regional
                     foreach ($data['collection'] as $index => $collection) { //year
@@ -143,19 +142,18 @@ class MalaysiaHoliday
                     }
                 }
 
-                return $result;
-            } else {
-                return $result;
             }
+
+            return $result;
         } else {
             return [
                 'status' => false,
-                'message' => "Error occured with the results"
+                'message' => "Error occurred with the results"
             ];
         }
     }
 
-    private function queryWeb($regional, $year)
+    private function queryWeb($regional, $year): array
     {
         $years = ($year == null) ? [date('Y')] : $year;
         if (!is_array($years)) {
@@ -217,7 +215,7 @@ class MalaysiaHoliday
      * @return array
      * @throws RegionException
      */
-    private function trigger($region, $currentYear)
+    private function trigger($region, $currentYear): array
     {
         if ($region) {
             $request_url = $this->base_url."/".$this->checkRegional($region)."/".$currentYear;
@@ -228,7 +226,7 @@ class MalaysiaHoliday
         return array_values(array_filter($this->crawl($request_url, $currentYear)));
     }
 
-    private function crawl($request_url, $currentYear)
+    private function crawl($request_url, $currentYear): array
     {
         $crawler = $this->client->request('GET', $request_url);
         return $crawler->filter('.country-table tr')->each(
@@ -238,7 +236,7 @@ class MalaysiaHoliday
                     $date_str = strtok(trim($node->children()
                             ->eq(1)
                             ->extract(['_text', 'class'])[0][0]), "\n")." ".$currentYear;
-                    if ($date_str == null || empty($date_str)) {
+                    if (empty($date_str)) {
                         return null;
                     }
 
@@ -291,6 +289,9 @@ class MalaysiaHoliday
         );
     }
 
+    /**
+     * @throws RegionException
+     */
     private function checkRegional($regional)
     {
         foreach ($this->related_region as $index => $state) {
@@ -307,7 +308,7 @@ class MalaysiaHoliday
         throw new RegionException($regional . " is not include in the regional state");
     }
 
-    private function checkMonth($month)
+    private function checkMonth($month): bool
     {
         if (in_array(strtolower($month), array_map('strtolower', array_values($this->months_array)))) {
             return true;
@@ -316,7 +317,7 @@ class MalaysiaHoliday
         return isset($this->months_array[$month]);
     }
 
-    private function getMonth($month)
+    private function getMonth($month): string
     {
         return strtolower($this->months_array[$month]) ?? strtolower($month);
     }

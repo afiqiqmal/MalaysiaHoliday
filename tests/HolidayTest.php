@@ -5,7 +5,7 @@ namespace Tests;
 require_once __DIR__ .'/../vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
-use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
+use MalaysiaHoliday\MalaysiaHoliday;
 
 /**
  * RequestTest.php

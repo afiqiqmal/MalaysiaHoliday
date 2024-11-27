@@ -8,7 +8,7 @@
 
 require_once __DIR__ .'/../vendor/autoload.php';
 
-use afiqiqmal\MalaysiaHoliday\MalaysiaHoliday;
+use Holiday\MalaysiaHoliday;
 
 $holiday = new MalaysiaHoliday;
 
