@@ -11,6 +11,10 @@ Parsing Malaysian Public Holidays
 ![](https://banners.beyondco.de/Malaysia%20Holiday.png?theme=dark&packageName=afiqiqmal%2Fmalaysiaholiday&pattern=cage&style=style_1&description=Parsing+Malaysia+Public+Holiday&md=1&fontSize=100px&images=globe)
 
 
+### Holidays based on country
+If you want the list of holidays based on countries, you may refer here https://github.com/afiqiqmal/country-holiday
+
+
 ### How to Use :sparkles:
 
 Declare
