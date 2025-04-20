@@ -38,6 +38,7 @@ class MalaysiaHoliday
         'Perlis',
         'Putrajaya',
         'Sarawak',
+        'Sabah', 
         'Selangor',
         'Terengganu'
     ];
