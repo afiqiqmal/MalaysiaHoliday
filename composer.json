@@ -1,8 +1,8 @@
 {
     "name": "afiqiqmal/malaysiaholiday",
     "description": "to get all holidays date in malaysia",
-    "type": "package",
-    "keywords": ["php"],
+    "type": "library",
+    "keywords": ["php", "malaysia", "holiday", "laravel"],
     "license": "MIT",
     "authors": [
         {
@@ -11,19 +11,26 @@
         }
     ],
     "require": {
-        "php": ">=8.2",
-        "symfony/browser-kit": "^7.0",
-        "symfony/http-client": "^7.0",
-        "symfony/css-selector": "^7.0"
+        "php": "^8.2",
+        "symfony/browser-kit": "^7.4 || ^8.0",
+        "symfony/http-client": "^7.4 || ^8.0",
+        "symfony/css-selector": "^7.4 || ^8.0"
     },
     "require-dev": {
-        "vlucas/phpdotenv": "^5.2",
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^11.5 || ^12.0"
     },
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Holiday\\":"src/"
+            "Holiday\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

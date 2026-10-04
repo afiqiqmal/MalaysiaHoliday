@@ -1,5 +1,6 @@
-.env
 .idea
-.idea/*
 coverage.xml
 vendor
+.phpunit.cache
+.phpunit.result.cache
+composer.lock

@@ -1,1 +1,0 @@
-{"version":1,"defects":[],"times":{"Tests\\RequestTest::testGetAllRegionHoliday":0.275,"Tests\\RequestTest::testGetSpecificRegionHoliday":0.153,"Tests\\RequestTest::testGetMultipleRegionsHoliday":0.162,"Tests\\RequestTest::testGetAllRegionsHoliday":0.975,"Tests\\RequestTest::testErrorMessage":0.097}}

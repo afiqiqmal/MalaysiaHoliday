@@ -5,7 +5,6 @@ namespace Holiday;
 use Holiday\Exception\RegionException;
 use Symfony\Component\BrowserKit\HttpBrowser as Client;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use GuzzleHttp\Client as GuzzleClient;
 
 class MalaysiaHoliday
 {
@@ -38,7 +37,7 @@ class MalaysiaHoliday
         'Perlis',
         'Putrajaya',
         'Sarawak',
-        'Sabah', 
+        'Sabah',
         'Selangor',
         'Terengganu'
     ];
@@ -54,9 +53,9 @@ class MalaysiaHoliday
     private Client $client;
 
     private int|null $year = null;
-    private string|array $region = [];
+    private string|array|null $region = [];
 
-    private int|null $month = null;
+    private int|string|null $month = null;
     private bool $groupByMonth = false;
 
     public function __construct($client = null)
@@ -64,7 +63,7 @@ class MalaysiaHoliday
         $this->client = new Client($client);
     }
 
-    public static function make(HttpClientInterface $client = null): MalaysiaHoliday
+    public static function make(?HttpClientInterface $client = null): MalaysiaHoliday
     {
         return new self($client);
     }
@@ -107,6 +106,12 @@ class MalaysiaHoliday
         $result = $this->queryWeb($this->region, $this->year);
 
         if ($result['status']) {
+            // all-state result is a single region, not a list
+            $single = isset($result['data']['regional']);
+            if ($single) {
+                $result['data'] = [$result['data']];
+            }
+
             if ($this->month != null && $this->checkMonth($this->month)) {
                 foreach ($result['data'] as $key => $data) { //regional
                     foreach ($data['collection'] as $index => $collection) { //year
@@ -143,6 +148,10 @@ class MalaysiaHoliday
                     }
                 }
 
+            }
+
+            if ($single) {
+                $result['data'] = $result['data'][0];
             }
 
             return $result;
@@ -259,6 +268,8 @@ class MalaysiaHoliday
                     $temp['is_holiday'] = true;
                     switch (trim($node->extract(['class'])[0])) {
                         case 'govt_holiday':
+                        case 'govt-past':
+                        case 'govt':
                             $temp['type'] = "Government/Public Sector Holiday";
                             $temp['type_id'] = 1;
                             break;
@@ -320,20 +331,6 @@ class MalaysiaHoliday
 
     private function getMonth($month): string
     {
-        return strtolower($this->months_array[$month]) ?? strtolower($month);
+        return strtolower($this->months_array[$month] ?? $month);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 # Malaysia Holidays :airplane:
 Parsing Malaysian Public Holidays
 
-[![Build Status](https://travis-ci.org/xmhafiz/MalaysiaHoliday.svg?branch=master)](https://travis-ci.org/afiqiqmal/MalaysiaHoliday)
+[![Tests](https://github.com/afiqiqmal/MalaysiaHoliday/actions/workflows/php.yml/badge.svg)](https://github.com/afiqiqmal/MalaysiaHoliday/actions/workflows/php.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/afiqiqmal/MalaysiaHoliday.svg)](https://codecov.io/gh/afiqiqmal/MalaysiaHoliday)
 [![Packagist](https://img.shields.io/packagist/dt/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
 [![Packagist](https://img.shields.io/packagist/v/afiqiqmal/MalaysiaHoliday.svg)](https://packagist.org/packages/afiqiqmal/MalaysiaHoliday)
@@ -21,7 +21,7 @@ Declare
 ```php
 $holiday = new MalaysiaHoliday;
 MalaysiaHoliday::make();
-app(MalaysiaHoliday::class); // if bound with laravel refer here - https://laravel.com/docs/8.x/container#contextual-binding
+app(MalaysiaHoliday::class); // if bound with laravel refer here - https://laravel.com/docs/13.x/container#contextual-binding
 ```
 
 
@@ -71,7 +71,9 @@ $holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 ```
 
 ### Requirements
-PHP 7.0 and above (because 5.6 is too old 😝)
+- PHP 8.2 - 8.5
+- Symfony 7.4 / 8.x components
+- Framework agnostic — works with Laravel 11, 12 and 13
 
 ### To install
 
