@@ -42,7 +42,7 @@ class MalaysiaHoliday
         'Terengganu'
     ];
 
-    private $related_region = [
+    public static $related_region = [
         'Johore' => 'Johor',
         'KL' => 'Kuala Lumpur',
         'Malacca' => 'Melaka',
@@ -306,7 +306,7 @@ class MalaysiaHoliday
      */
     private function checkRegional($regional)
     {
-        foreach ($this->related_region as $index => $state) {
+        foreach (self::$related_region as $index => $state) {
             if (strtolower($index) == strtolower($regional)) {
                 $regional = $state;
                 break;

@@ -70,6 +70,49 @@ $holiday->fromAllState()->groupByMonth()->get();
 $holiday->fromAllState()->filterByMonth("January")->get();  //date('F')
 ```
 
+### School Holidays :school:
+
+Malaysia school holidays (Kumpulan A & Kumpulan B), including term and festive holidays
+
+```php
+MalaysiaSchoolHoliday::make()->get(); // all groups, current year
+MalaysiaSchoolHoliday::make()->fromState("Selangor")->get();
+MalaysiaSchoolHoliday::make()->fromState(["Selangor", "Kedah"])->get();
+MalaysiaSchoolHoliday::make()->ofYear(2026)->get();
+```
+
+> Source only publishes the current academic year. Requesting another year returns `status: false` with a message.
+
+Sample
+<pre>
+{
+   "status":true,
+   "year":2026,
+   "data":[
+      {
+         "regional":"Selangor",
+         "group":"Kumpulan B",
+         "collection":[
+            {
+               "name":"Term 1 Holidays",
+               "start_date":"2026-03-21",
+               "end_date":"2026-03-29",
+               "start_day":"Saturday",
+               "end_day":"Sunday",
+               "total_days":9,
+               "is_holiday":true,
+               "type":"Term Holiday",
+               "states":["Johor", "Kuala Lumpur", "..."]
+            }
+         ]
+      }
+   ],
+   "error_messages":[]
+}
+</pre>
+
+`type` is one of `School Session` (first day of school), `Term Holiday` or `Festive Holiday`.
+
 ### Requirements
 - PHP 8.2 - 8.5
 - Symfony 7.4 / 8.x components
@@ -151,6 +194,8 @@ run
 ### Source :date:
 
 Scraped from - http://www.officeholidays.com/countries/malaysia
+
+School holidays scraped from - https://publicholidays.com.my/school-holidays/
 
 ### MIT Licence
 
