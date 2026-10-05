@@ -10,6 +10,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class MalaysiaSchoolHoliday
 {
     private string $base_url = "https://publicholidays.com.my/school-holidays";
+    private string $fallback_url = "https://calendarmalaysia.com/school-holidays-";
     private Client $client;
 
     private int|null $year = null;
@@ -52,20 +53,31 @@ class MalaysiaSchoolHoliday
     {
         $year = (int)($this->year ?? date('Y'));
 
-        try {
-            $groups = $this->crawl($year);
-        } catch (\Throwable $e) {
-            return [
-                'status' => false,
-                'message' => "Error occurred with the results",
-            ];
+        $groups = null;
+        $source = null;
+        $failed = 0;
+
+        // publicholidays.com.my only shows the current academic year, so fall back to
+        // calendarmalaysia.com which has a page per year
+        foreach (['crawl' => $this->base_url."/", 'crawlFallback' => $this->fallback_url.$year."/"] as $method => $url) {
+            try {
+                $result = $this->{$method}($year);
+                if ($this->publishedYear($result) === $year) {
+                    $groups = $result;
+                    $source = $url;
+                    break;
+                }
+            } catch (\Throwable) {
+                $failed++;
+            }
         }
 
-        $published = $this->publishedYear($groups);
-        if ($published !== $year) {
+        if ($groups === null) {
             return [
                 'status' => false,
-                'message' => "School holidays for {$year} are not available yet. Latest published year is {$published}",
+                'message' => $failed === 2
+                    ? "Error occurred with the results"
+                    : "School holidays for {$year} are not available",
             ];
         }
 
@@ -102,6 +114,7 @@ class MalaysiaSchoolHoliday
         return [
             'status' => true,
             'year' => $year,
+            'source' => $source,
             'data' => $final,
             'error_messages' => $error_messages,
             'developer' => [
@@ -114,7 +127,7 @@ class MalaysiaSchoolHoliday
 
     private function crawl(int $year): array
     {
-        $crawler = $this->client->request('GET', $this->base_url."/".$year."/");
+        $crawler = $this->client->request('GET', $this->base_url."/");
 
         if ($this->client->getResponse()->getStatusCode() !== 200) {
             throw new \RuntimeException("Unable to fetch school holidays");
@@ -172,6 +185,86 @@ class MalaysiaSchoolHoliday
         return $groups;
     }
 
+    private function crawlFallback(int $year): array
+    {
+        $crawler = $this->client->request('GET', $this->fallback_url.$year."/");
+
+        if ($this->client->getResponse()->getStatusCode() !== 200) {
+            throw new \RuntimeException("Unable to fetch school holidays");
+        }
+
+        // each group: <h3>Kumpulan X ...</h3>, then (states) paragraph and table further down the page
+        $headings = $crawler->filter('h3')->reduce(
+            fn (Crawler $heading) => (bool)preg_match('/^Kumpulan [A-Z]\b/', trim($heading->text()))
+        );
+
+        $groups = $headings->each(function (Crawler $heading) {
+            $node = $heading->getNode(0);
+            $xpath = new \DOMXPath($node->ownerDocument);
+            $paragraph = $xpath->query('following::p[1]', $node)->item(0);
+            $table = $xpath->query('following::table[1]', $node)->item(0);
+
+            preg_match('/^Kumpulan [A-Z]\b/', trim($heading->text()), $match);
+            $states = $paragraph ? $this->parseStates($paragraph->textContent) : [];
+
+            $collection = $table ? (new Crawler($table))->filter('tbody tr')->each(
+                fn (Crawler $row) => $this->parseFallbackRow($row, $match[0], $states)
+            ) : [];
+
+            return [
+                'group' => $match[0],
+                'states' => $states,
+                'collection' => array_values(array_filter($collection)),
+            ];
+        });
+
+        foreach ($groups as &$group) {
+            usort($group['collection'], fn ($a, $b) => strcmp($a['start_date'], $b['start_date']));
+        }
+
+        return $groups;
+    }
+
+    /**
+     * Finishes column holds an end date, nothing (single day) or a note such as "Kedah Only"
+     */
+    private function parseFallbackRow(Crawler $row, string $group, array $states): ?array
+    {
+        $cells = $row->filter('td');
+        if ($cells->count() < 3) {
+            return null;
+        }
+
+        $start = $this->parseDate($cells->eq(1)->text());
+        if (!$start) {
+            return null;
+        }
+
+        $finishes = trim($cells->eq(2)->text());
+        $end = $this->parseDate($finishes) ?? $start;
+
+        if ($finishes !== '' && $end === $start) {
+            $states = array_values(array_intersect(
+                $states,
+                $this->resolveStates($finishes, [['group' => $group, 'states' => $states]], $states)
+            ));
+        }
+
+        $name = trim($cells->eq(0)->text());
+
+        return [
+            'name' => $name,
+            'start_date' => $start->format('Y-m-d'),
+            'end_date' => $end->format('Y-m-d'),
+            'start_day' => $start->format('l'),
+            'end_day' => $end->format('l'),
+            'total_days' => $start->diff($end)->days + 1,
+            'is_holiday' => true,
+            'type' => stripos($name, 'PERAYAAN') !== false ? 'Festive Holiday' : 'Term Holiday',
+            'states' => $states,
+        ];
+    }
+
     private function parseRow(Crawler $row, array $states, string $type = 'Term Holiday'): ?array
     {
         $cells = $row->filter('td');
@@ -203,11 +296,13 @@ class MalaysiaSchoolHoliday
 
     private function parseDate(string $text): ?\DateTimeImmutable
     {
-        if (!preg_match('/\d{1,2} [A-Za-z]{3} \d{4}/', $text, $match)) {
+        if (!preg_match('/\d{1,2} [A-Za-z]{3,9} \d{4}/', $text, $match)) {
             return null;
         }
 
-        return \DateTimeImmutable::createFromFormat('!j M Y', $match[0]) ?: null;
+        return \DateTimeImmutable::createFromFormat('!j M Y', $match[0])
+            ?: \DateTimeImmutable::createFromFormat('!j F Y', $match[0])
+            ?: null;
     }
 
     private function parseStates(string $text): array
@@ -225,14 +320,15 @@ class MalaysiaSchoolHoliday
     }
 
     /**
-     * Resolve text such as "Kumpulan A", "Sarawak" or "All States in Kumpulan B except Sarawak"
+     * Resolve text such as "Kumpulan A", "Sarawak", "All States in Kumpulan B except Sarawak"
+     * or "Kecuali Negeri Sarawak". $default is used when nothing is named before "except"
      */
-    private function resolveStates(string $text, array $groups): array
+    private function resolveStates(string $text, array $groups, array $default = []): array
     {
-        $parts = preg_split('/\bexcept\b/i', $text, 2);
+        $parts = preg_split('/\b(except|kecuali)\b/i', $text, 2);
 
         return array_values(array_diff(
-            $this->statesIn($parts[0], $groups),
+            $this->statesIn($parts[0], $groups) ?: $default,
             $this->statesIn($parts[1] ?? '', $groups)
         ));
     }

@@ -81,13 +81,14 @@ MalaysiaSchoolHoliday::make()->fromState(["Selangor", "Kedah"])->get();
 MalaysiaSchoolHoliday::make()->ofYear(2026)->get();
 ```
 
-> Source only publishes the current academic year. Requesting another year returns `status: false` with a message.
+> Data is taken from publicholidays.com.my (current academic year only, with festival names). Other years fall back to calendarmalaysia.com (2025 onwards, names in Malay such as `CUTI PENGGAL 1` / `TAMBAHAN CUTI PERAYAAN`). The `source` key shows which one was used. A year with no data returns `status: false` with a message.
 
 Sample
 <pre>
 {
    "status":true,
    "year":2026,
+   "source":"https://publicholidays.com.my/school-holidays/",
    "data":[
       {
          "regional":"Selangor",
@@ -195,7 +196,7 @@ run
 
 Scraped from - http://www.officeholidays.com/countries/malaysia
 
-School holidays scraped from - https://publicholidays.com.my/school-holidays/
+School holidays scraped from - https://publicholidays.com.my/school-holidays/ and https://calendarmalaysia.com
 
 ### MIT Licence
 
