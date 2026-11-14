@@ -2,7 +2,10 @@
 
 namespace Tests;
 
+require_once __DIR__.'/Support/Fixtures.php';
+
 use PHPUnit\Framework\TestCase;
+use Tests\Support\Fixtures;
 use Holiday\MalaysiaHoliday;
 
 /**
@@ -16,8 +19,8 @@ class HolidayTest extends TestCase
      */
     public function testGetAllRegionHoliday()
     {
-        $holiday = new MalaysiaHoliday;
-        $response = $holiday->fromAllState()->get();
+        $holiday = MalaysiaHoliday::make(Fixtures::client());
+        $response = $holiday->fromAllState(2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data']['regional'] == 'Malaysia');
@@ -28,8 +31,8 @@ class HolidayTest extends TestCase
      */
     public function testGetSpecificRegionHoliday()
     {
-        $holiday = new MalaysiaHoliday;
-        $response = $holiday->fromState('Selangor')->get();
+        $holiday = MalaysiaHoliday::make(Fixtures::client());
+        $response = $holiday->fromState('Selangor', 2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -40,8 +43,8 @@ class HolidayTest extends TestCase
      */
     public function testGetMultipleRegionsHoliday()
     {
-        $holiday = new MalaysiaHoliday;
-        $response = $holiday->fromState(['Selangor', 'Malacca'])->get();
+        $holiday = MalaysiaHoliday::make(Fixtures::client());
+        $response = $holiday->fromState(['Selangor', 'Malacca'], 2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -50,8 +53,8 @@ class HolidayTest extends TestCase
 
     public function testGetAllRegionsHoliday()
     {
-        $holiday = new MalaysiaHoliday;
-        $response = $holiday->fromState(MalaysiaHoliday::$region_array)->get();
+        $holiday = MalaysiaHoliday::make(Fixtures::client());
+        $response = $holiday->fromState(MalaysiaHoliday::$region_array, 2026)->get();
 
         $this->assertTrue($response['status']);
         foreach (MalaysiaHoliday::$region_array as $key => $regional) {
@@ -64,8 +67,8 @@ class HolidayTest extends TestCase
      */
     public function testErrorMessage()
     {
-        $holiday = new MalaysiaHoliday;
-        $response = $holiday->fromState(['Selangor', 'Malaccaa'])->get();
+        $holiday = MalaysiaHoliday::make(Fixtures::client());
+        $response = $holiday->fromState(['Selangor', 'Malaccaa'], 2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertTrue($response['data'][0]['regional'] == 'Selangor');
@@ -80,7 +83,7 @@ class HolidayTest extends TestCase
 
     public function testFilterByMonthName()
     {
-        $response = MalaysiaHoliday::make()->fromState('Selangor', 2026)->filterByMonth('August')->get();
+        $response = MalaysiaHoliday::make(Fixtures::client())->fromState('Selangor', 2026)->filterByMonth('August')->get();
 
         $this->assertTrue($response['status']);
         foreach ($response['data'][0]['collection'][0]['data'] as $holiday) {
@@ -90,7 +93,7 @@ class HolidayTest extends TestCase
 
     public function testAllStateGroupByMonth()
     {
-        $response = MalaysiaHoliday::make()->fromAllState(2026)->groupByMonth()->get();
+        $response = MalaysiaHoliday::make(Fixtures::client())->fromAllState(2026)->groupByMonth()->get();
 
         $this->assertTrue($response['status']);
         $this->assertSame('Malaysia', $response['data']['regional']);
@@ -99,7 +102,7 @@ class HolidayTest extends TestCase
 
     public function testCrawledDataIsValid()
     {
-        $response = MalaysiaHoliday::make()->fromState(['Selangor', 'Melaka'], 2026)->get();
+        $response = MalaysiaHoliday::make(Fixtures::client())->fromState(['Selangor', 'Melaka'], 2026)->get();
 
         foreach ($response['data'] as $region) {
             $holidays = $region['collection'][0]['data'];

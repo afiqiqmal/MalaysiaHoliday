@@ -2,8 +2,11 @@
 
 namespace Tests;
 
+require_once __DIR__.'/Support/Fixtures.php';
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Tests\Support\Fixtures;
 use Holiday\MalaysiaHoliday;
 use Holiday\MalaysiaSchoolHoliday;
 
@@ -14,7 +17,7 @@ class SchoolHolidayTest extends TestCase
      */
     public function testGetAllGroupSchoolHoliday()
     {
-        $response = MalaysiaSchoolHoliday::make()->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->ofYear(2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertSame(['Kumpulan A', 'Kumpulan B'], array_column($response['data'], 'group'));
@@ -28,7 +31,7 @@ class SchoolHolidayTest extends TestCase
      */
     public function testGetSchoolHolidayByState()
     {
-        $response = MalaysiaSchoolHoliday::make()->fromState(['Selangor', 'KL', 'Malaccaa'])->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->fromState(['Selangor', 'KL', 'Malaccaa'], 2026)->get();
 
         $this->assertTrue($response['status']);
         $this->assertSame('Selangor', $response['data'][0]['regional']);
@@ -48,7 +51,7 @@ class SchoolHolidayTest extends TestCase
     #[DataProvider('yearProvider')]
     public function testGetEachStateSchoolHoliday($year)
     {
-        $response = MalaysiaSchoolHoliday::make()->fromState(MalaysiaHoliday::$region_array, $year)->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->fromState(MalaysiaHoliday::$region_array, $year)->get();
 
         $this->assertTrue($response['status']);
         $this->assertSame($year, $response['year']);
@@ -75,7 +78,7 @@ class SchoolHolidayTest extends TestCase
      */
     public function testFallbackExcludedState()
     {
-        $response = MalaysiaSchoolHoliday::make()->fromState(['Sarawak', 'Selangor'], 2027)->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->fromState(['Sarawak', 'Selangor'], 2027)->get();
 
         $this->assertTrue($response['status']);
         $this->assertStringContainsString('calendarmalaysia.com', $response['source']);
@@ -93,7 +96,7 @@ class SchoolHolidayTest extends TestCase
      */
     public function testFestiveHolidayExcludedState()
     {
-        $response = MalaysiaSchoolHoliday::make()->fromState('Sarawak')->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->fromState('Sarawak', 2026)->get();
 
         $this->assertTrue($response['status']);
         foreach ($response['data'][0]['collection'] as $holiday) {
@@ -106,7 +109,7 @@ class SchoolHolidayTest extends TestCase
      */
     public function testUnpublishedYear()
     {
-        $response = MalaysiaSchoolHoliday::make()->ofYear(2099)->get();
+        $response = MalaysiaSchoolHoliday::make(Fixtures::client())->ofYear(2099)->get();
 
         $this->assertFalse($response['status']);
         $this->assertArrayHasKey('message', $response);
